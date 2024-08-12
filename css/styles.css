@@ -299,13 +299,13 @@ body{
     width: 13%;
 }
 .tableusers table#usersTable thead tr th:nth-child(3) {
-    width: 15%;
+    width: 20%;
 }
 .tableusers table#usersTable thead tr th:nth-child(4) {
     width: 15%;
 }
 .tableusers table#usersTable thead tr th:nth-child(5) {
-    width: 20%;
+    width: 15%;
 }
 .tableusers table#usersTable thead tr th:nth-child(6) {
     width: 24%;
