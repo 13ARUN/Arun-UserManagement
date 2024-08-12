@@ -133,15 +133,6 @@ function deleteUser(userId) {
     const updatedUsers = users.filter(user => user.id !== userId);
     localStorage.setItem('users', JSON.stringify(updatedUsers));
 
-    // Remove the user from all groups
-    const groups = JSON.parse(localStorage.getItem('groups')) || [];
-    groups.forEach(group => {
-        if (group.users) {
-            group.users = group.users.filter(user => user !== userId);
-        }
-    });
-    localStorage.setItem('groups', JSON.stringify(groups));
-
     renderUsers();
 
 }
@@ -190,14 +181,17 @@ cancelEditBtn.addEventListener('click', () => {
 
 
 
+
+
+
+
+
 const createGroupModal = document.querySelector('.createGroupModal');
 const createGroupBtn = document.querySelector('#createGroup');
 const closebtn = document.querySelector('#closeCreateGroupModal');
 const submitbtn = document.querySelector('#submitCreateGroupModal');
 
-logo.addEventListener('click', () => {
-    sidebar.classList.toggle('active');
-});
+
 
 createGroupBtn.addEventListener('click', () => {
     createGroupModal.style.display = 'flex';
@@ -281,7 +275,6 @@ closeAddUserBtn.addEventListener('click', () => {
     addUserToGroupModal.style.display = 'none';
 });
 
-// Function to show the modal and populate the users dropdown
 function addUser(groupId) {
     addUserToGroupModal.style.display = 'flex';
 
@@ -289,13 +282,10 @@ function addUser(groupId) {
 
     addUserSubmitBtn.innerHTML = `Add users to ${groups[groupId-1].groupName}`;
 
-    // Fetch users from local storage
     const users = localStorage.getItem('users') ? JSON.parse(localStorage.getItem('users')) : [];
     
-    // Clear existing options
     usersSelect.innerHTML = '';
 
-    // Populate dropdown with users
     users.forEach(user => {
         const option = document.createElement('option');
         option.value = user.id;
@@ -303,14 +293,11 @@ function addUser(groupId) {
         usersSelect.appendChild(option);
     });
 
-    // Handle form submission
     addUsersToGroupForm.onsubmit = (event) => {
         event.preventDefault();
 
-        // Get selected user IDs
         const selectedUserNames = Array.from(usersSelect.selectedOptions).map(option => option.textContent);
 
-        // Update local storage
         const groups = localStorage.getItem('groups') ? JSON.parse(localStorage.getItem('groups')) : [];
         const group = groups.find(g => g.id === groupId);
 
@@ -335,12 +322,11 @@ function addUser(groupId) {
 
 
 const removeUserFromGroupModal = document.querySelector('.removeUserFromGroup');
-const usersSelectRemove = document.querySelector('#usersSelectRemove');
+const userSelect = document.querySelector('#usersSelectRemove');
 const removeUsersFromGroupForm = document.querySelector('#removeUserFromGroup');
 const closeRemoveUserBtn = document.querySelector('#closeRemoveUser');
-const removeUserSubmitBtn = document.querySelector('#removeUserFromGroup button[type="submit"]');
+const removeUserSubmitBtn = document.querySelector('#removeUserFromGroup button[type="submitRemoveUser"]');
 
-// Function to show the modal and populate the users dropdown for removal
 function removeUser(groupId) {
     removeUserFromGroupModal.style.display = 'flex';
 
@@ -350,41 +336,30 @@ function removeUser(groupId) {
     if (group) {
         removeUserSubmitBtn.innerHTML = `Remove users from ${group.groupName}`;
 
-        // Fetch users from local storage
-        const allUsers = localStorage.getItem('users') ? JSON.parse(localStorage.getItem('users')) : [];
+        userSelect.innerHTML = '';
 
-        // Clear existing options
-        usersSelectRemove.innerHTML = '';
-
-        // Populate dropdown with users assigned to the group
-        if (group.users) {
-            group.users.forEach(userId => {
-                const user = allUsers.find(u => u.id === userId);
-                if (user) {
-                    const option = document.createElement('option');
-                    option.value = user.id;
-                    option.textContent = user.userName;
-                    usersSelectRemove.appendChild(option);
-                }
+        if (group.users && group.users.length > 0) {
+            group.users.forEach(user => {
+                const option = document.createElement('option');
+                option.textContent = user; 
+                userSelect.appendChild(option);
             });
         }
 
-        // Handle form submission
         removeUsersFromGroupForm.onsubmit = (event) => {
             event.preventDefault();
 
-            // Get selected user IDs
-            const selectedUserIds = Array.from(usersSelectRemove.selectedOptions).map(option => option.value);
+            const selectedUserNames = Array.from(userSelect.selectedOptions).map(option => option.textContent);
 
-            // Update local storage
             const updatedGroups = groups.map(g => {
                 if (g.id === groupId) {
-                    g.users = g.users.filter(userId => !selectedUserIds.includes(userId));
+                    g.users = g.users.filter(user => !selectedUserNames.includes(user));
                 }
                 return g;
             });
 
             localStorage.setItem('groups', JSON.stringify(updatedGroups));
+
             renderGroups();
 
             removeUserFromGroupModal.style.display = 'none';
@@ -392,10 +367,11 @@ function removeUser(groupId) {
     }
 }
 
-// Close button for remove user modal
 closeRemoveUserBtn.addEventListener('click', () => {
     removeUserFromGroupModal.style.display = 'none';
 });
+
+
 
 
 // module.exports = {
