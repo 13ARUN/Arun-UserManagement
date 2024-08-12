@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management System</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+<body>
+    <!--* Side Bar *-->
+    <nav class="sidebar">
+        <div class="logo_content">
+            <div class="logo">
+                <i class="fa-solid fa-users-gear"></i>
+                <div class="logo_name">
+                    <h3>Manage Users</h3>
+                </div>
+            </div>
+            <i id="btn" class="fa-solid fa-bars"></i>
+        </div>
+        <ul class="nav_list">
+            <li>
+                <a id="user" href="#userPage" class="selected">
+                    <i class="fa-solid fa-user"></i>
+                    <span class="links_name">User Management</span>
+                </a>
+            </li>
+            <li>
+                <a id="group" href="#groupPage" >
+                    <i class="fa-solid fa-user-group"></i>
+                    <span class="links_name">Group Management</span>
+                </a>
+            </li>
+            <li>
+                <a id="role" href="#rolePage">
+                    <i class="fa-solid fa-user-gear"></i>
+                    <span class="links_name">Role Management</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!--* User page *-->
+    <div class="home_content" id="userPage">
+
+        <h1>User Management</h1>
+
+        <!-- Add User Form -->
+         <div class="addUserModal" style="display: none;">
+            <form id="addUserForm"  autocomplete="off">
+                
+                
+                <button id="closeAddUserModal" type="button">Close</button>
+                <h3>Add User</h3>
+                <label for="userName">Username:</label>
+                <input type="text" id="userName" required>
+                <label for="email">Email:</label>
+                <input type="email" id="email" required>
+                <label for="firstName">First Name:</label>
+                <input type="text" id="firstName" required>
+                <label for="lastName">Last Name:</label>
+                <input type="text" id="lastName" required>
+                <div class="addUserModalBtns">
+                    <button id="submitAddUserModal" type="submit">Add User</button>
+                    <button id="clear" type="reset">Clear</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Users List -->
+        <div class="topic">
+            <h2 id="userList">Users List</h2>
+            <div class="addBtn">
+                <button id="addUser"><i class="fa-solid fa-user-plus"></i> Create User</button>
+            </div>
+        </div>
+
+        <div class="tableusers">
+            <table id="usersTable">
+                <thead>
+                    <tr>
+                        <th>User ID</th>
+                        <th>User Name</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <!-- Update User Form -->
+         <div class="updateUserModal" style="display:none;">
+            <form id="updateUserForm" >
+                <h3>Update User</h3>
+                <label for="updateUsername">Username:</label>
+                <input type="text" id="updateUsername" required><br>
+                <label for="updateEmail">Email:</label>
+                <input type="email" id="updateEmail" required><br>
+                <label for="updateFirstName">First Name:</label>
+                <input type="text" id="updateFirstName" required><br>
+                <label for="updateLastName">Last Name:</label>
+                <input type="text" id="updateLastName" required><br>
+                <div class="updateUserModalBtns">
+                    <button type="submit">Update User</button>
+                    <button id="cancelEdit" type="button">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!--* Group page *-->
+    <div class="home_content" id="groupPage">
+        
+        <h1>Group Management</h1>
+
+        <!-- Create Group Form -->
+         <div class="createGroupModal" style="display: none;">
+            <form id="createGroupForm">
+                <button id="closeCreateGroupModal" type="button">Close</button>
+                <h3>Create Group</h3>
+                <label for="groupName">Group Name:</label>
+                <input type="text" id="groupName" required>
+                <button id="submitCreateGroupModal" type="submit">Create Group</button>
+            </form>
+        </div>
+
+        <!-- Groups List -->
+        <div class="topic">
+            <h2 id="groupList">Groups List</h2>
+            <div class="createBtn">
+                <button id="createGroup"><i class="fa-solid fa-user-plus"></i> Create Group</button>
+            </div>
+        </div>
+        
+        <div class="tablegroups">
+            <table id="groupsTable">
+                <thead>
+                    <tr>
+                        <th style="width: 15%;">Group ID</th>
+                        <th style="width: 25%;">Group Name</th>
+                        <th style="width: 35%;">Users</th>
+                        <th style="width: 25%;" >Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <!-- Add Users to Group Form -->
+        <div class="addUserToGroupModal" style="display: none;">
+            <form id="addUsersToGroupForm">
+                <button id="closeAddUser" type="button">Close</button>
+                <h3>Add Users to Group</h3>
+                <label for="usersSelect">Select Users:</label>
+                <select id="usersSelect" multiple required></select>
+                <button type="submit"></button>
+            </form>
+        </div>
+
+        <div class="removeUserFromGroup" style="display: none;">
+            <form id="removeUserFromGroup" >
+                <button id="closeRemoveUser" type="button">Close</button>
+                <h3>Remove Users from Group</h3>
+                <label for="usersSelect">Select Users:</label>
+                <select id="usersSelect" multiple required></select>
+                <button type="submit">Remove Users from Group</button>
+            </form>
+        </div>
+
+    </div>
+
+    <!--* Role page *-->
+    <div class="home_content" id="rolePage">
+        
+        <h1>Role Management</h1>
+
+        <!-- Create Role Form -->
+         <div class="createRoleModal">
+            <form id="createRoleForm" style="display: none;">
+                <h3>Create Role</h3>
+                <label for="roleName">Role Name:</label>
+                <input type="text" id="roleName" required>
+                <label for="roleDescription">Role Description:</label>
+                <input type="text" id="roleDescription" required>
+                <button type="submit">Create Role</button>
+            </form>
+        </div>
+
+        <!-- Roles List -->
+        
+        <div class="topic">
+            <h2 id="roleList">Roles List</h2>
+            <div class="createbtn">
+                <div class="search">
+                    <input id="searchRole" type="search" placeholder="Search roles..">
+                </div>
+                <div class="createRoleBtn">
+                    <button id="createRole"><i class="fa-solid fa-user-plus"></i> Create Role</button>
+
+                </div>
+            </div>
+        </div>
+        
+        <div class="tableroles">
+            <table id="rolesTable">
+                <thead>
+                    <tr>
+                        <th>Role Name</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <!-- Assign Roles to User Form -->
+        <form id="assignRolesToUserForm" style="display: none;">
+            <h3>Assign Roles to User</h3>
+            <label for="roleSelect">Select Role:</label>
+            <select id="roleSelect" required></select>
+            <label for="usersSelect">Select Users:</label>
+            <select id="usersSelect" multiple required></select>
+            <button type="submit">Assign Roles to Users</button>
+        </form>
+
+        <!-- Assign Roles to Group Form -->
+        <form id="assignRolesToGroupForm" style="display: none;">
+            <h3>Assign Roles to Group</h3>
+            <label for="groupRoleSelect">Select Role:</label>
+            <select id="groupRoleSelect" required></select><br>
+            <label for="groupsSelect">Select Groups:</label>
+            <select id="groupsSelect" multiple required></select><br>
+            <button type="submit">Assign Roles to Groups</button>
+        </form>
+
+        <!-- View Role Assignments -->
+        
+        <div class="topic">
+            <h2 id="roleAssignments">Role Assignments</h2>
+            <h3>Assign Role: </h3>
+            <div class="assignUsers">
+                <button id="assignRole"><i class="fa-solid fa-user"></i> Users</button>
+            </div>
+            <div class="assignGroup">
+                <button id="assigngroup"><i class="fa-solid fa-user-group"></i> Groups</button>
+            </div>
+        </div>
+        <input type="search" placeholder="Filter by...">
+        <select name="filter" id=""></select>
+        <div class="tableroleassignments">
+            <table id="roleAssignmentsTable">
+                <thead>
+                    <tr>
+                        <th>Role Name</th>
+                        <th>Assigned Users</th>
+                        <th>Assigned Groups</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        
+    </div>
+
+    <script src="script.js"></script>
+    
+</body>
+</html>
+
+
