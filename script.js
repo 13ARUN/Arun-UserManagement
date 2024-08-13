@@ -147,9 +147,9 @@ function createUserRow(user) {
         <td class="userEmail-${user.id}">${user.email}</td>
         <td class="userFname-${user.id}">${user.firstName}</td>
         <td class="userLname-${user.id}">${user.lastName}</td>
-        <td class="userActions-${user.id}">
-            <button title="edit" class="editUser">Edit</button>
-            <button title="delete" class="deleteUser">Delete</button>
+        <td class="actions" id="userActions-${user.id}">
+            <button title="edit" class="editUser"><i class="fa-solid fa-pen-to-square"></i> Edit User</button>
+            <button title="delete" class="deleteUser"><i class="fa-solid fa-trash"></i> Delete User</button>
         </td>
     `;
 
@@ -281,9 +281,9 @@ function renderGroups() {
                 <td class="groupId-${group.id}">${formattedGroupId}</td>
                 <td class="groupName-${group.id}">${group.groupName}</td>
                 <td class="users-${group.id}">${usersContent}</td>
-                <td class="userActions-${group.id}">
-                    <button title="add" class="addUser">Add User</button>
-                    <button title="remove" class="removeUser">Remove User</button>
+                <td class="actions" id="groupActions-${group.id}">
+                    <button title="add" class="addUser"><i class="fa-solid fa-user-plus"></i> Add User</button>
+                    <button title="remove" class="removeUser"><i class="fa-solid fa-user-minus"></i> Remove User</button>
                 </td>
             `;
             groupsTableBody.appendChild(row);
@@ -442,6 +442,10 @@ function renderRoles() {
                 <td class="roleId-${role.id}">${formattedRoleId}</td>
                 <td class="roleName-${role.id}">${role.name}</td>
                 <td class="roleDescription-${role.id}">${role.description}</td>
+                <td class="actions" id="roleActions-${user.id}">
+                    <button title="assignUser" class="assignUser"><i class="fa-solid fa-user"></i> Assign User</button>
+                    <button title="assignGroup" class="assignGroup"><i class="fa-solid fa-user-group"></i> Assign Group</button>
+                </td>
             `;
 
             rolesTableBody.appendChild(row);

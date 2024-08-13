@@ -173,55 +173,77 @@ body{
     display: flex;
     justify-content: left;
     align-items: center;
-    width: 50%;
+    width: 60%;
     height: 100%;
     color: #333;
 }
-.topic .addBtn,.createBtn{
+
+.topic .createBtn2{
     width: 50%;
     height: 100%;
     display: flex;
     align-items: center;
-    justify-content: end; 
-}
-.topic #roleList{
-    width: 70%;
-}
-.topic .createbtn{
-    width: 50%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-}
-.topic .search,.createRoleBtn{
-    width: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: end; 
-}
-.topic h3{
-    display: flex;
     justify-content: end;
-    align-items: center;
-    width: 34%;
-    height: 100%;
-    color: #333;
 }
-.topic .assignUsers{
-    width: 8%;
+
+
+.topic .createbtn,.topic .view{
+    width: 40%;
     height: 100%;
     display: flex;
     align-items: center;
-    justify-content: center; 
+    justify-content: end;
 }
-.topic .assignGroup{
-    width: 8%;
+
+.topic .createbtn,.topic .view{
+    width: 40%;
     height: 100%;
     display: flex;
     align-items: center;
-    justify-content: center; 
+    justify-content: end;
 }
-#addUser,#createGroup,#createRole,#assignRole,#assigngroup{
+
+
+.topic .createRoleBtn,.topic .viewRoles{
+    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: end; 
+}
+
+.topic .search{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    border-style: solid;
+    border-radius: 20px;
+    border-color: #79787b;  
+
+}
+
+#searchRole{
+    width: 90%;
+    height: 35px;
+    border: none;
+    outline: none;
+    padding-left: 5%;
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+   
+}
+
+.topic .search i{
+    width: 10%;
+    font-size: 20px;
+}
+
+
+
+
+#addUser,#createGroup,#createRole,#viewRoles{
     height: 40px;
     width: 150px;
     background-color: #4CAF50;
@@ -296,7 +318,7 @@ body{
     width: 10%;
 }
 .tableusers table#usersTable thead tr th:nth-child(2) {
-    width: 13%;
+    width: 15%;
 }
 .tableusers table#usersTable thead tr th:nth-child(3) {
     width: 20%;
@@ -308,10 +330,23 @@ body{
     width: 15%;
 }
 .tableusers table#usersTable thead tr th:nth-child(6) {
-    width: 24%;
+    width: 25%;
 }
 
 /** Create User Modal */
+
+.actions {
+    width: 100%;
+
+}
+
+.actions button{
+    width: 45%;
+    font-weight: bold;
+    
+}
+
+
 
 .addUserModal{
     position: fixed;
@@ -488,7 +523,7 @@ td button {
     border: none;
     cursor: pointer;
     width: 100px;
-    height: 30px;
+    height: 35px;
     border-radius: 20px;
     
 
