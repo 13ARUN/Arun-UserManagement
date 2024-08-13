@@ -138,7 +138,7 @@ function renderUsers() {
 }
 
 function createUserRow(user) {
-    const formattedUserId = `U${String(user.id).padStart(3, '0')}`;
+    const formattedUserId = `US${String(user.id).padStart(3, '0')}`;
     const row = document.createElement('tr');
     row.id = `UserRow-${user.id}`;
     row.innerHTML = `
@@ -272,7 +272,7 @@ function renderGroups() {
         groupsTableBody.appendChild(noGroupsRow);
     } else {
         groups.forEach(group => {
-            const formattedGroupId = `G${String(group.id).padStart(3, '0')}`;
+            const formattedGroupId = `GP${String(group.id).padStart(3, '0')}`;
 
             const row = document.createElement('tr');
             row.id = `GroupRow-${group.id}`;
@@ -434,7 +434,7 @@ function renderRoles() {
         rolesTableBody.innerHTML = '<tr><td colspan="3" class="no-roles">No roles</td></tr>';
     } else {
         roles.forEach(role => {
-            const formattedRoleId = `R${String(role.id).padStart(3, '0')}`;
+            const formattedRoleId = `RL${String(role.id).padStart(3, '0')}`;
 
             const row = document.createElement('tr');
             row.id = `RoleRow-${role.id}`;
@@ -477,11 +477,15 @@ function handleSearch(event) {
     } else {
         filteredRoles.forEach(role => {
             const row = document.createElement('tr');
-            const formattedRoleId = `R${String(role.id).padStart(3, '0')}`;
+            const formattedRoleId = `RL${String(role.id).padStart(3, '0')}`;
             row.innerHTML = `
                 <td class="roleId-${role.id}">${formattedRoleId}</td>
                 <td class="roleName-${role.id}">${role.name}</td>
                 <td class="roleDescription-${role.id}">${role.description}</td>
+                <td class="actions" id="roleActions-${user.id}">
+                    <button title="assignUser" class="assignUser"><i class="fa-solid fa-user"></i> Assign User</button>
+                    <button title="assignGroup" class="assignGroup"><i class="fa-solid fa-user-group"></i> Assign Group</button>
+                </td>
             `;
             rolesTableBody.appendChild(row);
         });
