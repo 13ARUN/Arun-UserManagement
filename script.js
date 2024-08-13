@@ -1,11 +1,9 @@
-const sidebar = document.querySelector('.sidebar'),
-    logo = document.querySelector('.logo_content');
+const sidebar = document.querySelector('.sidebar');
+const logo = document.querySelector('.logo_content');
 
 logo.addEventListener('click', () => {
     sidebar.classList.toggle('active');
 });
-
-
 
 document.addEventListener("DOMContentLoaded", function () {
     const sidebarLinks = document.querySelectorAll('.nav_list a');
@@ -28,162 +26,195 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+
+
+function getUsersFromStorage() {
+    return JSON.parse(localStorage.getItem('users')) || [];
+}
+
+function saveUsersToStorage(users) {
+    localStorage.setItem('users', JSON.stringify(users));
+}
+
+
 //* user js
 
-const createUserModal = document.querySelector('.addUserModal'),
-    createUserBtn = document.querySelector('#addUser'),
-    closeBtn = document.querySelector('#closeAddUserModal'),
-    submitBtn = document.querySelector('#submitAddUserModal');
+const createUserModal = document.querySelector('.addUserModal');
+const createUserBtn = document.querySelector('#addUser');
+const closeBtn = document.querySelector('#closeAddUserModal');
+const submitBtn = document.querySelector('#submitAddUserModal');
 
-const userName = document.querySelector('#userName');
-const email = document.querySelector('#email');
-const firstName = document.querySelector('#firstName');
-const lastName = document.querySelector('#lastName');
+const userNameInput = document.querySelector('#userName');
+const emailInput = document.querySelector('#email');
+const firstNameInput = document.querySelector('#firstName');
+const lastNameInput = document.querySelector('#lastName');
 
-createUserBtn.addEventListener('click', () => {
-    createUserModal.style.display = 'flex';
-});
+const updateUserModal = document.querySelector('.updateUserModal');
+const updateUserForm = document.querySelector('#updateUserForm');
+const updateUsernameInput = document.querySelector('#updateUsername');
+const updateEmailInput = document.querySelector('#updateEmail');
+const updateFirstNameInput = document.querySelector('#updateFirstName');
+const updateLastNameInput = document.querySelector('#updateLastName');
+const cancelEditBtn = document.querySelector('#cancelEdit');
 
-closeBtn.addEventListener('click', () => {
-    createUserModal.style.display = 'none';
-});
+// Event Listeners
+createUserBtn.addEventListener('click', () => toggleModal(createUserModal, 'flex'));
+closeBtn.addEventListener('click', () => toggleModal(createUserModal, 'none'));
+submitBtn.addEventListener('click', AddUser);
+cancelEditBtn.addEventListener('click', () => toggleModal(updateUserModal, 'none'));
 
-submitBtn.addEventListener('click', () => {
-    const user = {
-        id: generateUserId(),
-        userName: formatInput(userName.value),
-        email: formatInput(email.value),
-        firstName: formatInput(firstName.value),
-        lastName: formatInput(lastName.value),
-    };
+document.addEventListener('DOMContentLoaded', renderUsers);
 
-    const users = localStorage.getItem('users') ? JSON.parse(localStorage.getItem('users')) : [];
-    users.push(user);
-    localStorage.setItem('users', JSON.stringify(users));
-    localStorage.setItem('user', JSON.stringify(user));
 
-    userName.value = "";
-    email.value = "";
-    firstName.value = "";
-    lastName.value = "";
 
-    renderUsers();
 
-    createUserModal.style.display = 'none';
-});
+// Functions
+function toggleModal(modal, displayStyle) {
+    modal.style.display = displayStyle;
+}
 
 function formatInput(input) {
     return input.trim().replace(/\s+/g, ' ');
 }
 
 function generateUserId() {
-    const users = localStorage.getItem('users') ? JSON.parse(localStorage.getItem('users')) : [];
+    const users = getUsersFromStorage();
     return users.length ? users[users.length - 1].id + 1 : 1;
 }
 
-document.addEventListener('DOMContentLoaded', renderUsers);
+
+// User Handling Functions
+function AddUser() {
+    const user = {
+        id: generateUserId(),
+        userName: formatInput(userNameInput.value),
+        email: formatInput(emailInput.value),
+        firstName: formatInput(firstNameInput.value),
+        lastName: formatInput(lastNameInput.value),
+    };
+
+    const users = getUsersFromStorage();
+    users.push(user);
+    saveUsersToStorage(users);
+
+    clearInputFields([userNameInput, emailInput, firstNameInput, lastNameInput]);
+
+    renderUsers();
+    toggleModal(createUserModal, 'none');
+}
+
+function clearInputFields(inputs) {
+    inputs.forEach(input => input.value = '');
+}
 
 function renderUsers() {
     const usersTableBody = document.querySelector('#usersTable tbody');
-    const users = localStorage.getItem('users') ? JSON.parse(localStorage.getItem('users')) : [];
+    const users = getUsersFromStorage();
 
     usersTableBody.innerHTML = '';
 
     if (users.length === 0) {
-        const noUsersRow = document.createElement('tr');
-        noUsersRow.innerHTML = `
-            <td colspan="6" class="no-users">No users</td>
-        `;
-        usersTableBody.appendChild(noUsersRow);
+        usersTableBody.innerHTML = `<tr><td colspan="6" class="no-users">No users</td></tr>`;
     } else {
         users.forEach(user => {
-            const formattedUserId = `U${String(user.id).padStart(3, '0')}`;
-
-            const row = document.createElement('tr');
-            row.id = `UserRow-${user.id}`;
-            row.innerHTML = `
-                <td class="userId-${user.id}">${formattedUserId}</td>
-                <td class="userName-${user.id}">${user.userName}</td>
-                <td class="userEmail-${user.id}">${user.email}</td>
-                <td class="userFname-${user.id}">${user.firstName}</td>
-                <td class="userLname-${user.id}">${user.lastName}</td>
-                <td class="userActions-${user.id}">
-                    <button title="edit" class="editUser">Edit</button>
-                    <button title="delete" class="deleteUser">Delete</button>
-                </td>
-            `;
+            const row = createUserRow(user);
             usersTableBody.appendChild(row);
-
-            const editButton = row.querySelector('.editUser');
-            const deleteButton = row.querySelector('.deleteUser');
-
-            editButton.addEventListener('click', () => editUser(user.id));
-            deleteButton.addEventListener('click', () => deleteUser(user.id));
         });
     }
 }
 
-function deleteUser(userId) {
-    const users = JSON.parse(localStorage.getItem('users'));
-    const updatedUsers = users.filter(user => user.id !== userId);
-    localStorage.setItem('users', JSON.stringify(updatedUsers));
+function createUserRow(user) {
+    const formattedUserId = `U${String(user.id).padStart(3, '0')}`;
+    const row = document.createElement('tr');
+    row.id = `UserRow-${user.id}`;
+    row.innerHTML = `
+        <td class="userId-${user.id}">${formattedUserId}</td>
+        <td class="userName-${user.id}">${user.userName}</td>
+        <td class="userEmail-${user.id}">${user.email}</td>
+        <td class="userFname-${user.id}">${user.firstName}</td>
+        <td class="userLname-${user.id}">${user.lastName}</td>
+        <td class="userActions-${user.id}">
+            <button title="edit" class="editUser">Edit</button>
+            <button title="delete" class="deleteUser">Delete</button>
+        </td>
+    `;
 
-    renderUsers();
+    row.querySelector('.editUser').addEventListener('click', () => editUser(user.id));
+    row.querySelector('.deleteUser').addEventListener('click', () => deleteUser(user.id));
 
+    return row;
 }
-const updateUserModal = document.querySelector('.updateUserModal');
-const updateUserForm = document.querySelector('#updateUserForm');
-const updateUsername = document.querySelector('#updateUsername');
-const updateEmail = document.querySelector('#updateEmail');
-const updateFirstName = document.querySelector('#updateFirstName');
-const updateLastName = document.querySelector('#updateLastName');
-const cancelEditBtn = document.querySelector('#cancelEdit');
+
+function deleteUser(userId) {
+    const users = getUsersFromStorage();
+    const updatedUsers = users.filter(user => user.id !== userId);
+    saveUsersToStorage(updatedUsers);
+    renderUsers();
+}
 
 function editUser(userId) {
-    const users = JSON.parse(localStorage.getItem('users'));
+    const users = getUsersFromStorage();
     const user = users.find(u => u.id === userId);
 
-    updateUsername.value = user.userName;
-    updateEmail.value = user.email;
-    updateFirstName.value = user.firstName;
-    updateLastName.value = user.lastName;
+    updateUsernameInput.value = user.userName;
+    updateEmailInput.value = user.email;
+    updateFirstNameInput.value = user.firstName;
+    updateLastNameInput.value = user.lastName;
 
-    updateUserModal.style.display = 'flex';
+    toggleModal(updateUserModal, 'flex');
 
     updateUserForm.onsubmit = function (event) {
         event.preventDefault();
-
-        user.userName = formatInput(updateUsername.value);
-        user.email = formatInput(updateEmail.value);
-        user.firstName = formatInput(updateFirstName.value);
-        user.lastName = formatInput(updateLastName.value);
-
-        localStorage.setItem('users', JSON.stringify(users));
-
-        updateUserModal.style.display = 'none';
-        updateUserForm.reset();
-
-        renderUsers();
-
+        updateUser(userId);
     };
 }
 
-cancelEditBtn.addEventListener('click', () => {
-    updateUserModal.style.display = 'none';
-});
+function updateUser(userId) {
+    const users = getUsersFromStorage();
+    const user = users.find(u => u.id === userId);
 
+    user.userName = formatInput(updateUsernameInput.value);
+    user.email = formatInput(updateEmailInput.value);
+    user.firstName = formatInput(updateFirstNameInput.value);
+    user.lastName = formatInput(updateLastNameInput.value);
 
+    saveUsersToStorage(users);
 
+    toggleModal(updateUserModal, 'none');
+    updateUserForm.reset();
+    renderUsers();
+}
 
 
 //* group js
 
-// Create Group Modal
+// Constants for DOM elements
 const createGroupModal = document.querySelector('.createGroupModal');
 const createGroupBtn = document.querySelector('#createGroup');
 const closeCreateGroupModalBtn = document.querySelector('#closeCreateGroupModal');
 const submitCreateGroupModalBtn = document.querySelector('#submitCreateGroupModal');
 const groupNameInput = document.querySelector('#groupName');
+
+const addUserToGroupModal = document.querySelector('.addUserToGroupModal');
+const usersSelect = document.querySelector('#usersSelect');
+const addUsersToGroupForm = document.querySelector('#addUsersToGroupForm');
+const addUserSubmitBtn = document.querySelector('#addUsersToGroupForm button[type="submit"]');
+const closeAddUserBtn = document.querySelector('#closeAddUser');
+
+const removeUserFromGroupModal = document.querySelector('.removeUserFromGroup');
+const userSelect = document.querySelector('#usersSelectRemove');
+const removeUsersFromGroupForm = document.querySelector('#removeUserFromGroup');
+const closeRemoveUserBtn = document.querySelector('#closeRemoveUser');
+const removeUserSubmitBtn = document.querySelector('#removeUserFromGroup button[type="submit"]');
+
+createGroupBtn.addEventListener('click', () => showModal(createGroupModal));
+closeCreateGroupModalBtn.addEventListener('click', () => hideModal(createGroupModal));
+submitCreateGroupModalBtn.addEventListener('click', CreateGroup);
+closeAddUserBtn.addEventListener('click', () => hideModal(addUserToGroupModal));
+closeRemoveUserBtn.addEventListener('click', () => hideModal(removeUserFromGroupModal));
+
+document.addEventListener('DOMContentLoaded', renderGroups);
+
 
 function showModal(modal) {
     modal.style.display = 'flex';
@@ -193,10 +224,13 @@ function hideModal(modal) {
     modal.style.display = 'none';
 }
 
-createGroupBtn.addEventListener('click', () => showModal(createGroupModal));
-closeCreateGroupModalBtn.addEventListener('click', () => hideModal(createGroupModal));
+function generateGroupId() {
+    const groups = localStorage.getItem('groups') ? JSON.parse(localStorage.getItem('groups')) : [];
+    return groups.length ? groups[groups.length - 1].id + 1 : 1;
+}
 
-submitCreateGroupModalBtn.addEventListener('click', () => {
+
+function CreateGroup() {
     const group = {
         id: generateGroupId(),
         groupName: groupNameInput.value,
@@ -210,14 +244,8 @@ submitCreateGroupModalBtn.addEventListener('click', () => {
     groupNameInput.value = "";
     renderGroups();
     hideModal(createGroupModal);
-});
-
-function generateGroupId() {
-    const groups = localStorage.getItem('groups') ? JSON.parse(localStorage.getItem('groups')) : [];
-    return groups.length ? groups[groups.length - 1].id + 1 : 1;
 }
 
-// Render Groups
 function renderGroups() {
     const groupsTableBody = document.querySelector('#groupsTable tbody');
     const groups = localStorage.getItem('groups') ? JSON.parse(localStorage.getItem('groups')) : [];
@@ -252,22 +280,10 @@ function renderGroups() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', renderGroups);
-
-// Add User to Group Modal
-const addUserToGroupModal = document.querySelector('.addUserToGroupModal');
-const usersSelect = document.querySelector('#usersSelect');
-const addUsersToGroupForm = document.querySelector('#addUsersToGroupForm');
-const addUserSubmitBtn = document.querySelector('#addUsersToGroupForm button[type="submit"]');
-const closeAddUserBtn = document.querySelector('#closeAddUser');
-
-closeAddUserBtn.addEventListener('click', () => hideModal(addUserToGroupModal));
-
-// Add User to Group Modal
 function addUser(groupId) {
     showModal(addUserToGroupModal);
 
-    const groups = localStorage.getItem('groups') ? JSON.parse(localStorage.getItem('groups')) : [];
+    const groups = JSON.parse(localStorage.getItem('groups'));
     const group = groups.find(g => g.id === groupId);
     addUserSubmitBtn.innerHTML = `Add users to ${group.groupName}`;
 
@@ -286,7 +302,6 @@ function addUser(groupId) {
         const selectedUserNames = Array.from(usersSelect.selectedOptions).map(option => option.textContent);
         const updatedGroups = groups.map(g => {
             if (g.id === groupId) {
-                if (!g.users) g.users = [];
                 selectedUserNames.forEach(userName => {
                     if (!g.users.includes(userName)) g.users.push(userName);
                 });
@@ -300,48 +315,37 @@ function addUser(groupId) {
     };
 }
 
-// Remove User from Group Modal
-const removeUserFromGroupModal = document.querySelector('.removeUserFromGroup');
-const userSelect = document.querySelector('#usersSelectRemove');
-const removeUsersFromGroupForm = document.querySelector('#removeUserFromGroup');
-const closeRemoveUserBtn = document.querySelector('#closeRemoveUser');
-const removeUserSubmitBtn = document.querySelector('#removeUserFromGroup button[type="submit"]');
-
-closeRemoveUserBtn.addEventListener('click', () => hideModal(removeUserFromGroupModal));
-
 function removeUser(groupId) {
     showModal(removeUserFromGroupModal);
 
-    const groups = localStorage.getItem('groups') ? JSON.parse(localStorage.getItem('groups')) : [];
+    const groups = JSON.parse(localStorage.getItem('groups'));
     const group = groups.find(g => g.id === groupId);
 
-    if (group) {
-        removeUserSubmitBtn.innerHTML = `Remove users from ${group.groupName}`;
-        
-        if (group.users.length === 0) {
-            userSelect.innerHTML = '<option>No users to remove</option>';
-            removeUserSubmitBtn.disabled = true; // Disable the submit button if no users to remove
-        } else {
-            userSelect.innerHTML = group.users.map(user => `<option>${user}</option>`).join('');
-            removeUserSubmitBtn.disabled = false; // Enable the submit button if users are available
-        }
-
-        removeUsersFromGroupForm.onsubmit = (event) => {
-            event.preventDefault();
-
-            const selectedUsers = Array.from(userSelect.selectedOptions).map(option => option.textContent);
-            const updatedGroups = groups.map(g => {
-                if (g.id === groupId) {
-                    g.users = g.users.filter(user => !selectedUsers.includes(user));
-                }
-                return g;
-            });
-
-            localStorage.setItem('groups', JSON.stringify(updatedGroups));
-            renderGroups();
-            hideModal(removeUserFromGroupModal);
-        };
+    removeUserSubmitBtn.innerHTML = `Remove users from ${group.groupName}`;
+    
+    if (group.users.length === 0) {
+        userSelect.innerHTML = '<option>No users to remove</option>';
+        removeUserSubmitBtn.disabled = true; // Disable the submit button if no users to remove
+    } else {
+        userSelect.innerHTML = group.users.map(user => `<option>${user}</option>`).join('');
+        removeUserSubmitBtn.disabled = false; // Enable the submit button if users are available
     }
+    removeUsersFromGroupForm.onsubmit = (event) => {
+        event.preventDefault();
+
+        const selectedUsers = Array.from(userSelect.selectedOptions).map(option => option.textContent);
+        const updatedGroups = groups.map(g => {
+            if (g.id === groupId) {
+                g.users = g.users.filter(user => !selectedUsers.includes(user));
+            }
+            return g;
+        });
+
+        localStorage.setItem('groups', JSON.stringify(updatedGroups));
+        renderGroups();
+        hideModal(removeUserFromGroupModal);
+    };
+    
 }
 
 

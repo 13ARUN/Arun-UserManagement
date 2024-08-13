@@ -259,11 +259,6 @@ describe('User Page', () => {
             expect(firstName.value).toBe('');
             expect(lastName.value).toBe('');
 
-            let user = getLocalStorageItem('user');
-            expect(user.userName).toBe('Arun');
-            expect(user.email).toBe('Arun');
-            expect(user.firstName).toBe('Arun');
-            expect(user.lastName).toBe('Arun');
 
             let users = getLocalStorageItem('users');
             expect(users[0].userName).toBe('Arun');
@@ -299,11 +294,7 @@ describe('User Page', () => {
             expect(firstName.value).toBe('');
             expect(lastName.value).toBe('');
 
-            let user = getLocalStorageItem('user');
-            expect(user.userName).toBe('Arun');
-            expect(user.email).toBe('Arun');
-            expect(user.firstName).toBe('Arun');
-            expect(user.lastName).toBe('Arun');
+
 
             let users = getLocalStorageItem('users');
             expect(users[0].userName).toBe('Arun');
@@ -319,11 +310,7 @@ describe('User Page', () => {
             
             fireEvent.click(submitBtn);
 
-            let userUpdated = getLocalStorageItem('user');
-            expect(userUpdated.userName).toBe('user2');
-            expect(userUpdated.email).toBe('user2');
-            expect(userUpdated.firstName).toBe('user2');
-            expect(userUpdated.lastName).toBe('user2');
+
 
             let usersUpdated = getLocalStorageItem('users');
 
@@ -355,11 +342,6 @@ describe('User Page', () => {
             fireEvent.click(submitBtn);
 
 
-            let user = getLocalStorageItem('user');
-            expect(user.userName).toBe('Arun');
-            expect(user.email).toBe('Ar un');
-            expect(user.firstName).toBe('Arun');
-            expect(user.lastName).toBe('Arun');
 
             let users = getLocalStorageItem('users');
             expect(users[0].userName).toBe('Arun');
@@ -385,12 +367,11 @@ describe('User Page', () => {
             const submitBtn = document.querySelector('#submitAddUserModal');
             fireEvent.click(submitBtn);
 
-            let user1 = getLocalStorageItem('user');
-            expect(user1.id).toBe(1);
 
             let users = getLocalStorageItem('users');
             expect(users[0].id).toBe(1);
 
+            
             userName.value = "Arun";
             email.value = "Arun";
             firstName.value = "Arun";
@@ -398,8 +379,6 @@ describe('User Page', () => {
 
             fireEvent.click(submitBtn);
 
-            let user2 = getLocalStorageItem('user');
-            expect(user2.id).toBe(2);
 
             let usersUpdated = getLocalStorageItem('users');
             expect(usersUpdated[0].id).toBe(1);
@@ -502,7 +481,7 @@ describe('User Page', () => {
         beforeEach(() => {
             // Setup initial state for each test
 
-            ({deleteUser} = require('../script.js'));
+            ({deleteUser,renderUsers} = require('../script.js'));
             users = [
                 { id: 1, userName: 'JohnDoe', email: 'john@example.com', firstName: 'John', lastName: 'Doe' },
                 { id: 2, userName: 'JaneDoe', email: 'jane@example.com', firstName: 'Jane', lastName: 'Doe' }
@@ -550,13 +529,27 @@ describe('User Page', () => {
             expect(noUsersMessage).not.toBeNull();
             expect(noUsersMessage.textContent).toBe('No users');
         });
+
+        it('should work with delete button event listener', () => {
+
+            let deleteBtn1 = document.querySelector('.userActions-1 button[title="delete"]');
+
+            deleteBtn1.click();
+    
+            const updatedUsers = getLocalStorageItem('users');
+            expect(updatedUsers).toHaveLength(1);
+            expect(updatedUsers[0].id).toBe(2);
+    
+            const userRow = document.querySelector('#UserRow-1');
+            expect(userRow).toBeNull();
+        });
     });
 
     describe('Editing users', () => {
         let users;
     
         beforeEach(() => {
-            ({editUser} = require('../script.js'));
+            ({editUser,renderUsers} = require('../script.js'));
     
             users = [
                 { id: 1, userName: 'JohnDoe', email: 'john@example.com', firstName: 'John', lastName: 'Doe' },
@@ -623,6 +616,20 @@ describe('User Page', () => {
     
             const users = getLocalStorageItem('users');
             expect(users[0].userName).toBe('JohnDoe');
+        });
+
+        it('should work with edit button event listener', () => {
+
+            const updateUserModal = document.querySelector('.updateUserModal');
+            expect(updateUserModal).toBeTruthy();
+            expect(updateUserModal.style.display).toBe('none');
+
+            let editBtn1 = document.querySelector('.userActions-1 button[title="edit"]');
+
+            editBtn1.click();
+
+            expect(updateUserModal.style.display).toBe('flex');
+
         });
     });
 
@@ -785,6 +792,7 @@ describe('Group Page', () => {
         });
 
         it('should add a new group to localStorage and update the UI', () => {
+
             const groupName = document.querySelector('#groupName');
 
             expect(groupName.value).toBe('');
@@ -794,7 +802,7 @@ describe('Group Page', () => {
             const submitBtn = document.querySelector('#submitCreateGroupModal');
             submitBtn.click()
     
-            const groups = JSON.parse(localStorage.getItem('groups'));
+            const groups = getLocalStorageItem('groups');
             expect(groups.length).toBe(1);
             expect(groups[0].groupName).toBe("Group 1");
     
@@ -805,7 +813,7 @@ describe('Group Page', () => {
 
         it('should display "No users assigned" when a group is created but no users are assigned', () => {
 
-            localStorage.setItem('groups', JSON.stringify([{ id: 1, groupName: "Group 1", users: [] }]));
+            setLocalStorageItem('groups', JSON.stringify([{ id: 1, groupName: "Group 1", users: [] }]));
             
             renderGroups();
             
@@ -827,9 +835,10 @@ describe('Group Page', () => {
         });
 
 
+
         it('should display the "Add User to Group" modal and populate users dropdown', () => {
-            localStorage.setItem('groups', JSON.stringify([{ id: 1, groupName: "Group 1", users: [] }]));
-            localStorage.setItem('users', JSON.stringify([{ id: 1, userName: "User 1" }, { id: 2, userName: "User 2" }]));
+            setLocalStorageItem('groups', JSON.stringify([{ id: 1, groupName: "Group 1", users: [] }]));
+            setLocalStorageItem('users', JSON.stringify([{ id: 1, userName: "User 1" }, { id: 2, userName: "User 2" }]));
     
             renderGroups();
             const addUserBtn = document.querySelector('.addUser');
@@ -844,7 +853,7 @@ describe('Group Page', () => {
         });
 
         it('should show "No users to add" when there are no users in local storage', () => {
-            localStorage.setItem('groups', JSON.stringify([{ id: 1, groupName: "Group 1", users: [] }]));
+            setLocalStorageItem('groups', JSON.stringify([{ id: 1, groupName: "Group 1", users: [] }]));
             localStorage.removeItem('users'); 
         
             renderGroups();
@@ -860,8 +869,8 @@ describe('Group Page', () => {
         
 
         it('should add selected users to the group', () => {
-            localStorage.setItem('groups', JSON.stringify([{ id: 1, groupName: "Group 1", users: [] }]));
-            localStorage.setItem('users', JSON.stringify([{ id: 1, userName: "User 1" }, { id: 2, userName: "User 2" }]));
+            setLocalStorageItem('groups', JSON.stringify([{ id: 1, groupName: "Group 1", users: [] }]));
+            setLocalStorageItem('users', JSON.stringify([{ id: 1, userName: "User 1" }, { id: 2, userName: "User 2" }]));
     
             renderGroups();
             const addUserBtn = document.querySelector('.addUser');
@@ -874,7 +883,7 @@ describe('Group Page', () => {
             const addUsersToGroupBtn = document.querySelector('#addUsersToGroupForm button[type="submit"]');
             addUsersToGroupBtn.click();
     
-            const groups = JSON.parse(localStorage.getItem('groups'));
+            const groups = getLocalStorageItem('groups');
             expect(groups[0].users).toEqual(['User 1', 'User 2']);
     
             const tableRows = document.querySelectorAll('#groupsTable tbody tr');
@@ -883,8 +892,8 @@ describe('Group Page', () => {
 
         it('prevents adding duplicate users to the same group', () => {
 
-            localStorage.setItem('groups', JSON.stringify([{ id: 1, groupName: "Group 1", users: ['User 1'] }]));
-            localStorage.setItem('users', JSON.stringify([{ id: 1, userName: "User 1" }, { id: 2, userName: "User 2" }]));
+            setLocalStorageItem('groups', JSON.stringify([{ id: 1, groupName: "Group 1", users: ['User 1'] }]));
+            setLocalStorageItem('users', JSON.stringify([{ id: 1, userName: "User 1" }, { id: 2, userName: "User 2" }]));
     
             renderGroups();
             const addUserBtn = document.querySelector('.addUser');
@@ -897,7 +906,7 @@ describe('Group Page', () => {
             const addUsersToGroupBtn = document.querySelector('#addUsersToGroupForm button[type="submit"]');
             addUsersToGroupBtn.click();
     
-            const groups = JSON.parse(localStorage.getItem('groups'));
+            const groups = getLocalStorageItem('groups');
             expect(groups[0].users).toEqual(['User 1', 'User 2']);
     
             const tableRows = document.querySelectorAll('#groupsTable tbody tr');
@@ -924,7 +933,7 @@ describe('Group Page', () => {
 
 
         it('should display the "Remove User from Group" modal and populate users dropdown', () => {
-            localStorage.setItem('groups', JSON.stringify([{ id: 1, groupName: "Group 1", users: ["User 1", "User 2"] }]));
+            setLocalStorageItem('groups', JSON.stringify([{ id: 1, groupName: "Group 1", users: ["User 1", "User 2"] }]));
             renderGroups();
             
             const removeUserBtn = document.querySelector('.removeUser');
@@ -939,7 +948,7 @@ describe('Group Page', () => {
         });
 
         it('should show "No users to remove" when there are no users in the group', () => {
-            localStorage.setItem('groups', JSON.stringify([{ id: 1, groupName: "Group 1", users: [] }]));
+            setLocalStorageItem('groups', JSON.stringify([{ id: 1, groupName: "Group 1", users: [] }]));
         
             renderGroups();
             const removeUserBtn = document.querySelector('.removeUser');
@@ -955,7 +964,7 @@ describe('Group Page', () => {
 
         it('should remove selected users from the group', () => {
 
-            localStorage.setItem('groups', JSON.stringify([{ id: 1, groupName: "Group 1", users: ["User 1", "User 2"] }]));
+            setLocalStorageItem('groups', JSON.stringify([{ id: 1, groupName: "Group 1", users: ["User 1", "User 2"] }]));
             renderGroups();
             
             const removeUserBtn = document.querySelector('.removeUser');
@@ -967,7 +976,7 @@ describe('Group Page', () => {
             const removeUsersFromGroupBtn = document.querySelector('#removeUserFromGroup button[type="submit"]');
             removeUsersFromGroupBtn.click();
     
-            const groups = JSON.parse(localStorage.getItem('groups'));
+            const groups = getLocalStorageItem('groups');
             expect(groups[0].users).toEqual(['User 2']);
     
             const tableRows = document.querySelectorAll('#groupsTable tbody tr');
