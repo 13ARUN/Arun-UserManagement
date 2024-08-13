@@ -5,6 +5,20 @@ logo.addEventListener('click', () => {
     sidebar.classList.toggle('active');
 });
 
+//document.addEventListener('DOMContentLoaded', renderRoles);
+document.addEventListener('DOMContentLoaded', renderUsers);
+document.addEventListener('DOMContentLoaded', renderGroups);
+document.addEventListener('DOMContentLoaded', () => {
+    // Restore roles when DOM is loaded
+    renderRoles();
+    
+    // Attach search event listener
+    const searchInput = document.getElementById('searchRole');
+    searchInput.addEventListener('input', handleSearch);
+    
+
+});
+
 document.addEventListener("DOMContentLoaded", function () {
     const sidebarLinks = document.querySelectorAll('.nav_list a');
     const contentSections = document.querySelectorAll('.home_content');
@@ -63,7 +77,7 @@ closeBtn.addEventListener('click', () => toggleModal(createUserModal, 'none'));
 submitBtn.addEventListener('click', AddUser);
 cancelEditBtn.addEventListener('click', () => toggleModal(updateUserModal, 'none'));
 
-document.addEventListener('DOMContentLoaded', renderUsers);
+
 
 
 
@@ -213,7 +227,7 @@ submitCreateGroupModalBtn.addEventListener('click', CreateGroup);
 closeAddUserBtn.addEventListener('click', () => hideModal(addUserToGroupModal));
 closeRemoveUserBtn.addEventListener('click', () => hideModal(removeUserFromGroupModal));
 
-document.addEventListener('DOMContentLoaded', renderGroups);
+
 
 
 function showModal(modal) {
@@ -349,13 +363,188 @@ function removeUser(groupId) {
 }
 
 
+//* role js
+
+const createRoleModal = document.querySelector('.createRoleModal');
+const createRoleBtn = document.querySelector('#createRole');
+const closeCreateRoleModalBtn = document.querySelector('#closeCreateRoleModal');
+const submitCreateRoleModalBtn = document.querySelector('#submitCreateRoleModal');
+const roleNameInput = document.querySelector('#roleName');
+const roleDescriptionInput = document.querySelector('#roleDescription');
+
+const assignRoleToUserModal = document.querySelector('.assignRoleToUserModal');
+const userSelectForRole = document.querySelector('#userSelectForRole');
+const roleSelectForUser = document.querySelector('#roleSelectForUser');
+const assignRoleToUserForm = document.querySelector('#assignRoleToUserForm');
+const assignRoleSubmitBtn = document.querySelector('#assignRoleSubmitBtn');
+const closeAssignRoleBtn = document.querySelector('#closeAssignRoleBtn');
+
+const assignRoleToGroupModal = document.querySelector('.assignRoleToGroupModal');
+const groupSelectForRole = document.querySelector('#groupSelectForRole');
+const roleSelectForGroup = document.querySelector('#roleSelectForGroup');
+const assignRoleToGroupForm = document.querySelector('#assignRoleToGroupForm');
+const assignRoleGroupSubmitBtn = document.querySelector('#assignRoleGroupSubmitBtn');
+const closeAssignRoleGroupBtn = document.querySelector('#closeAssignRoleGroupBtn');
+
+// Event Listeners
+createRoleBtn.addEventListener('click', () => showModal(createRoleModal));
+closeCreateRoleModalBtn.addEventListener('click', () => hideModal(createRoleModal));
+submitCreateRoleModalBtn.addEventListener('click', createRole);
+
+//closeAssignRoleBtn.addEventListener('click', () => hideModal(assignRoleToUserModal));
+//assignRoleSubmitBtn.addEventListener('click', assignRoleToUser);
+
+//closeAssignRoleGroupBtn.addEventListener('click', () => hideModal(assignRoleToGroupModal));
+//assignRoleGroupSubmitBtn.addEventListener('click', assignRoleToGroup);
+
+
+
+// Functions
+
+
+function generateRoleId() {
+    const roles = localStorage.getItem('roles') ? JSON.parse(localStorage.getItem('roles')) : [];
+    return roles.length ? roles[roles.length - 1].id + 1 : 1;
+}
+
+function createRole() {
+    const role = {
+        id: generateRoleId(),
+        name: roleNameInput.value,
+        description: roleDescriptionInput.value,
+    };
+
+    const roles = localStorage.getItem('roles') ? JSON.parse(localStorage.getItem('roles')) : [];
+    roles.push(role);
+    localStorage.setItem('roles', JSON.stringify(roles));
+
+    roleNameInput.value = "";
+    roleDescriptionInput.value = "";
+    renderRoles();
+    hideModal(createRoleModal);
+}
+
+function renderRoles() {
+    const rolesTableBody = document.querySelector('#rolesTable tbody');
+    const roles = localStorage.getItem('roles') ? JSON.parse(localStorage.getItem('roles')) : [];
+
+    rolesTableBody.innerHTML = '';
+
+    if (roles.length === 0) {
+        rolesTableBody.innerHTML = '<tr><td colspan="3" class="no-roles">No roles</td></tr>';
+    } else {
+        roles.forEach(role => {
+            const formattedRoleId = `R${String(role.id).padStart(3, '0')}`;
+
+            const row = document.createElement('tr');
+            row.id = `RoleRow-${role.id}`;
+            row.innerHTML = `
+                <td class="roleId-${role.id}">${formattedRoleId}</td>
+                <td class="roleName-${role.id}">${role.name}</td>
+                <td class="roleDescription-${role.id}">${role.description}</td>
+            `;
+
+            rolesTableBody.appendChild(row);
+        });
+    }
+
+    const noResultsMessage = document.querySelector('#noResultsMessage');
+    if (noResultsMessage) {
+        noResultsMessage.remove();
+    }
+}
+
+
+function handleSearch(event) {
+    const searchValue = event.target.value.toLowerCase();
+    const roles = JSON.parse(localStorage.getItem('roles')) || [];
+    const filteredRoles = roles.filter(role => role.name.toLowerCase().includes(searchValue));
+    const rolesTableBody = document.querySelector('#rolesTable tbody');
+    
+    // Clear existing rows
+    rolesTableBody.innerHTML = '';
+    
+    if (filteredRoles.length === 0) {
+        // Display "No search results found" message
+        const noResultsMessage = document.createElement('tr');
+        noResultsMessage.id = 'noResultsMessage';
+        noResultsMessage.innerHTML = '<td colspan="3">No search results found</td>';
+        rolesTableBody.appendChild(noResultsMessage);
+    } else {
+        filteredRoles.forEach(role => {
+            const row = document.createElement('tr');
+            const formattedRoleId = `R${String(role.id).padStart(3, '0')}`;
+            row.innerHTML = `
+                <td class="roleId-${role.id}">${formattedRoleId}</td>
+                <td class="roleName-${role.id}">${role.name}</td>
+                <td class="roleDescription-${role.id}">${role.description}</td>
+            `;
+            rolesTableBody.appendChild(row);
+        });
+    }
+
+}
+
+
+
+
+
+// function assignRoleToUser() {
+//     const roleId = roleSelectForUser.value;
+//     const userId = userSelectForRole.value;
+
+//     if (!roleId || !userId) return;
+
+//     const roles = JSON.parse(localStorage.getItem('roles')) || [];
+//     const users = JSON.parse(localStorage.getItem('users')) || [];
+
+//     const role = roles.find(r => r.id == roleId);
+//     const user = users.find(u => u.id == userId);
+
+//     if (role && user) {
+//         user.role = role.name;
+//         localStorage.setItem('users', JSON.stringify(users));
+//         renderRoles();
+//         hideModal(assignRoleToUserModal);
+//     }
+// }
+
+// function assignRoleToGroup() {
+//     const roleId = roleSelectForGroup.value;
+//     const groupId = groupSelectForRole.value;
+
+//     if (!roleId || !groupId) return;
+
+//     const roles = JSON.parse(localStorage.getItem('roles')) || [];
+//     const groups = JSON.parse(localStorage.getItem('groups')) || [];
+
+//     const role = roles.find(r => r.id == roleId);
+//     const group = groups.find(g => g.id == groupId);
+
+//     if (role && group) {
+//         group.roles = group.roles || [];
+//         if (!group.roles.includes(role.name)) {
+//             group.roles.push(role.name);
+//             localStorage.setItem('groups', JSON.stringify(groups));
+//             renderRoles();
+//         }
+//         hideModal(assignRoleToGroupModal);
+//     }
+// }
+
+
+
+
+
 
 module.exports = {
     renderUsers,
     deleteUser,
     editUser,
-    renderGroups
+    renderGroups,
+    renderRoles
 };
+
 
 
 

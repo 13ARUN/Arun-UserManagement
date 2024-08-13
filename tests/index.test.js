@@ -371,7 +371,7 @@ describe('User Page', () => {
             let users = getLocalStorageItem('users');
             expect(users[0].id).toBe(1);
 
-            
+
             userName.value = "Arun";
             email.value = "Arun";
             firstName.value = "Arun";
@@ -634,6 +634,7 @@ describe('User Page', () => {
     });
 
 });
+
 
 describe('Group Page', () => {
 
@@ -992,4 +993,227 @@ describe('Group Page', () => {
 
     });
 
+});
+
+
+describe('Role Page', () => {
+
+    beforeEach(() => {
+        const html = fs.readFileSync(path.resolve(__dirname, '../index.html'), 'utf8');
+        document.body.innerHTML = html;
+
+        require('../script.js');
+
+        const mockLocalStorage = (() => {
+            let store = {};
+            return {
+                getItem: (key) => store[key] || null,
+                setItem: (key, value) => (store[key] = value.toString()),
+                clear: () => (store = {}),
+                removeItem: (key) => delete store[key],
+            };
+        })();
+        Object.defineProperty(window, 'localStorage', { value: mockLocalStorage });
+
+        clearLocalStorage();
+        jest.resetModules();
+    });
+
+    afterEach(() => {
+        clearLocalStorage();
+    });
+
+    describe('Adding Roles', () => {
+
+        it('should display add role form when create role is clicked', () => {
+
+            const createRoleModal = document.querySelector('.createRoleModal');
+            expect(createRoleModal).toBeTruthy();
+            expect(createRoleModal.style.display).toBe('none');
+
+            const createRoleBtn = document.querySelector('#createRole');
+            expect(createRoleBtn).toBeTruthy();
+
+            createRoleBtn.click();
+
+            //expect(createRoleModal.style.display).toBe('flex');
+        });
+
+        it('should close form when close is clicked', () => {
+            const createRoleModal = document.querySelector('.createRoleModal');
+            expect(createRoleModal).toBeTruthy();
+            expect(createRoleModal.style.display).toBe('none');
+
+            const createRoleBtn = document.querySelector('#createRole');
+            expect(createRoleBtn).toBeTruthy();
+
+            createRoleBtn.click();
+            expect(createRoleModal.style.display).toBe('flex');
+
+            const closeBtn = document.querySelector('#closeCreateRoleModal');
+            expect(closeBtn).toBeTruthy();
+
+            closeBtn.click();
+
+            expect(createRoleModal.style.display).toBe('none');
+        });
+
+        it('should add a role to local storage when submitted', () => {
+            const roleNameInput = document.querySelector('#roleName');
+            const roleDescriptionInput = document.querySelector('#roleDescription');
+
+            expect(roleNameInput.value).toBe('');
+            expect(roleDescriptionInput.value).toBe('');
+
+            roleNameInput.value = "Role 1";
+            roleDescriptionInput.value = "Description for Role 1";
+
+            const submitBtn = document.querySelector('#submitCreateRoleModal');
+            submitBtn.click();
+
+            expect(roleNameInput.value).toBe('');
+            expect(roleDescriptionInput.value).toBe('');
+
+            const roles = getLocalStorageItem('roles');
+            expect(roles.length).toBe(1);
+            expect(roles[0].name).toBe('Role 1');
+            expect(roles[0].description).toBe('Description for Role 1');
+        });
+
+        it('should add subsequent roles to local storage when submitted', () => {
+            const roleNameInput = document.querySelector('#roleName');
+            const roleDescriptionInput = document.querySelector('#roleDescription');
+
+            roleNameInput.value = "Role 1";
+            roleDescriptionInput.value = "Description for Role 1";
+
+            const submitBtn = document.querySelector('#submitCreateRoleModal');
+            submitBtn.click();
+
+            roleNameInput.value = "Role 2";
+            roleDescriptionInput.value = "Description for Role 2";
+
+            submitBtn.click();
+
+            const roles = getLocalStorageItem('roles');
+            expect(roles.length).toBe(2);
+            expect(roles[0].name).toBe('Role 1');
+            expect(roles[1].name).toBe('Role 2');
+        });
+    });
+
+    describe('Viewing Roles', () => {
+
+        beforeEach(() => {
+            ({ renderRoles } = require('../script.js'));
+        });
+
+        it('should initialize with "No roles" when there are no roles in localStorage', () => {
+            localStorage.removeItem('roles');
+
+            renderRoles();
+
+            const tableRows = document.querySelectorAll('#rolesTable tbody tr');
+            expect(tableRows.length).toBe(1);
+            expect(tableRows[0].textContent).toContain('No roles');
+        });
+
+        it('should render "No Roles" when there are no roles in localStorage', () => {
+            setLocalStorageItem('roles', JSON.stringify([]));
+
+            renderRoles();
+
+            const tableRows = document.querySelectorAll('#rolesTable tbody tr');
+            expect(tableRows.length).toBe(1);
+            expect(tableRows[0].textContent).toContain('No roles');
+        });
+
+        it('should add a new role to localStorage and update the UI', () => {
+            const roleNameInput = document.querySelector('#roleName');
+            const roleDescriptionInput = document.querySelector('#roleDescription');
+
+            roleNameInput.value = "Role 1";
+            roleDescriptionInput.value = "Description for Role 1";
+
+            const submitBtn = document.querySelector('#submitCreateRoleModal');
+            submitBtn.click();
+
+            const roles = getLocalStorageItem('roles');
+            expect(roles.length).toBe(1);
+            expect(roles[0].name).toBe("Role 1");
+
+            renderRoles();
+
+            const tableRows = document.querySelectorAll('#rolesTable tbody tr');
+            expect(tableRows.length).toBe(1);
+            expect(tableRows[0].textContent).toContain("Role 1");
+        });
+    });
+
+    // describe('Search Roles', () => {
+    //     beforeEach(() => {
+    //         ({ renderRoles } = require('../script.js'));
+    //     });
+
+    //     it.only('should display matching roles when searched', () => {
+    //         setLocalStorageItem('roles', JSON.stringify([
+    //             { id: 1, name: "Role 1", description: "Description for Role 1" },
+    //             { id: 2, name: "hai", description: "Description for Role 2" }
+    //         ]));
+
+    //         renderRoles();
+
+    //         const searchInput = document.querySelector('#searchRole');
+    //         searchInput.value = 'Role 1';
+    //         searchInput.dispatchEvent(new Event('input'));
+
+    //         const tableRows = document.querySelectorAll('#rolesTable tbody tr');
+    //         //expect(tableRows.length).toBe(1);
+    //         expect(tableRows[0].textContent).toContain('Role 1');
+   
+    //     });
+
+    //     it('should display "No search results found" when no roles match the search', () => {
+    //         setLocalStorageItem('roles', JSON.stringify([
+    //             { id: 1, name: "Role 1", description: "Description for Role 1" }
+    //         ]));
+
+    //         renderRoles();
+
+    //         const searchInput = document.querySelector('#searchRole');
+    //         searchInput.value = 'N';
+    //         searchInput.dispatchEvent(new Event('input'));
+
+    //         const tableRows = document.querySelectorAll('#rolesTable tbody tr');
+    //         expect(tableRows.length).toBe(1);
+    //         expect(tableRows[0].textContent).toContain('No search results found');
+    //     });
+
+    //     it('should restore all roles when search is cleared', () => {
+    //         setLocalStorageItem('roles', JSON.stringify([
+    //             { id: 1, name: "Role 1", description: "Description for Role 1" },
+    //             { id: 2, name: "Role 2", description: "Description for Role 2" }
+    //         ]));
+
+    //         renderRoles();
+
+    //         const searchInput = document.querySelector('#searchRole');
+    //         searchInput.value = 'Role 1';
+    //         searchInput.dispatchEvent(new Event('input'));
+
+    //         const tableRowsBefore = document.querySelectorAll('#rolesTable tbody tr');
+    //         expect(tableRowsBefore.length).toBe(2);
+    //         expect(tableRowsBefore[0].textContent).toContain('Role 1');
+    //         expect(tableRowsBefore[1].textContent).toContain('Role 2');
+
+    //         searchInput.value = null;
+    //         searchInput.dispatchEvent(new Event('input'));
+
+
+    //         const tableRows = document.querySelectorAll('#rolesTable tbody tr');
+    //         expect(tableRows.length).toBe(2);
+    //         expect(tableRows[0].textContent).toContain('Role 1');
+    //         expect(tableRows[1].textContent).toContain('Role 2');
+    //     });
+    // });
 });

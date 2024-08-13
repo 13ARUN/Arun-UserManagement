@@ -719,3 +719,237 @@ td button {
 
 
 
+
+/* role css */
+
+/** Create Role Modal */
+
+.createRoleModal {
+    position: fixed;
+    top: 0%;
+    left: 0%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: saturate(180%) blur(5px);
+    transition: visibility 0.3s, opacity 0.3s ease;
+}
+
+#createRoleForm {
+    background-color: #fff;
+    padding: 2%;
+    border-radius: 20px;
+    width: 40%;
+    height: 60%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.createRoleModal button[type="button"] {
+    width: 100%;
+    height: 10%;
+    display: flex;
+    justify-content: end;
+}
+
+.createRoleModal label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.createRoleModal input {
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.createRoleModal button[type="submit"],
+.createRoleModal #cancelCreate {
+    padding: 1%;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    height: 50px;
+}
+
+.createRoleModal button[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.createRoleModal button[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+.createRoleModal button[type="button"] {
+    background-color: #f44336;
+    color: white;
+}
+
+.createRoleModal button[type="button"]:hover {
+    background-color: #e53935;
+}
+
+/** Assign Role Modal */
+
+.assignRoleModal {
+    position: fixed;
+    top: 0%;
+    left: 0%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: saturate(180%) blur(5px);
+    transition: visibility 0.3s, opacity 0.3s ease;
+}
+
+#assignRoleForm {
+    background-color: #fff;
+    padding: 2%;
+    border-radius: 20px;
+    width: 40%;
+    height: 50%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.assignRoleModal button[type="button"] {
+    width: 100%;
+    height: 10%;
+    display: flex;
+    justify-content: end;
+}
+
+.assignRoleModal label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.assignRoleModal select {
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.assignRoleModal button[type="submit"],
+.assignRoleModal #cancelAssign {
+    padding: 1%;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    height: 50px;
+}
+
+.assignRoleModal button[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.assignRoleModal button[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+.assignRoleModal button[type="button"] {
+    background-color: #f44336;
+    color: white;
+}
+
+.assignRoleModal button[type="button"]:hover {
+    background-color: #e53935;
+}
+
+/** View Role Assignments Modal */
+
+.viewRoleAssignmentsModal {
+    position: fixed;
+    top: 0%;
+    left: 0%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: saturate(180%) blur(5px);
+    transition: visibility 0.3s, opacity 0.3s ease;
+}
+
+#viewRoleAssignmentsForm {
+    background-color: #fff;
+    padding: 2%;
+    border-radius: 20px;
+    width: 40%;
+    height: 60%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.viewRoleAssignmentsModal button[type="button"] {
+    width: 100%;
+    height: 10%;
+    display: flex;
+    justify-content: end;
+}
+
+.viewRoleAssignmentsModal label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.viewRoleAssignmentsModal select {
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.viewRoleAssignmentsModal button[type="submit"],
+.viewRoleAssignmentsModal #cancelView {
+    padding: 1%;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    height: 50px;
+}
+
+.viewRoleAssignmentsModal button[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.viewRoleAssignmentsModal button[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+.viewRoleAssignmentsModal button[type="button"] {
+    background-color: #f44336;
+    color: white;
+}
+
+.viewRoleAssignmentsModal button[type="button"]:hover {
+    background-color: #e53935;
+}
+
+
+
+
