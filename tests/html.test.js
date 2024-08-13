@@ -214,9 +214,10 @@ describe('HTML', () => {
                 checkNthChildTextContent('#usersTable thead tr', [
                     'User ID',
                     'User Name',
+                    'Email',
                     'First Name', 
                     'Last Name',  
-                    'Email',
+                    
                     'Actions'
                 ]);
                 checkInnerHtml('#usersTable tbody','');

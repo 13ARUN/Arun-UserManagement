@@ -30,37 +30,107 @@ const clearLocalStorage = () => {
 
 describe('Dynamic sidebar', () => {
 
-    // let sidebar,logo
+    let sidebar,logo
 
-    // beforeEach(() => {
+    beforeEach(() => {
 
-    //     const html = fs.readFileSync(path.resolve(__dirname, '../index.html'), 'utf8');
-    //     document.body.innerHTML = html;
-    //     require('../script.js');
+        const html = fs.readFileSync(path.resolve(__dirname, '../index.html'), 'utf8');
+        document.body.innerHTML = html;
+        require('../script.js');
 
-    //     jest.resetModules();
+        jest.resetModules();
 
-    //     sidebar = document.querySelector('.sidebar');
-    //     logo = document.querySelector('.logo_content');
+        sidebar = document.querySelector('.sidebar');
+        logo = document.querySelector('.logo_content');
 
-    // });
+    });
     
-    // it('should toggle class of Sidebar', () => {
+    it('should toggle class of Sidebar', () => {
 
-    //     expect(sidebar.classList).toContain('sidebar');
-    //     expect(sidebar.classList).not.toContain('selected');
+        expect(sidebar.classList).toContain('sidebar');
+        expect(sidebar.classList).not.toContain('active');
 
-    //     logo.click();
+        logo.click();
 
-    //     expect(sidebar.classList).toContain('sidebar');
-    //     expect(sidebar.classList).toContain('active');
+        expect(sidebar.classList).toContain('sidebar');
+        expect(sidebar.classList).toContain('active');
 
-    //     logo.click();
+        logo.click();
 
-    //     expect(sidebar.classList).toContain('sidebar');
-    //     expect(sidebar.classList).not.toContain('selected');
+        expect(sidebar.classList).toContain('sidebar');
+        expect(sidebar.classList).not.toContain('active');
 
-    // });
+    });
+
+});
+
+describe('DOMContentLoaded event listener', () => {
+
+    let userPage,groupPage,rolePage,userTab,groupTab,roleTab;
+    let sidebarLinks, contentSections;
+
+    beforeEach(() => {
+
+        const html = fs.readFileSync(path.resolve(__dirname, '../index.html'), 'utf8');
+        document.body.innerHTML = html;
+
+        require('../script.js');
+
+        jest.resetModules();
+
+        sidebarLinks = document.querySelectorAll('.nav_list a');
+        contentSections = document.querySelectorAll('.home_content');
+
+    });
+
+
+    it('should only display the first section on page load', () => {
+        document.dispatchEvent(new Event('DOMContentLoaded'));
+
+        expect(contentSections[0].style.display).toBe('flex');
+        expect(contentSections[1].style.display).toBe('none');
+        expect(contentSections[2].style.display).toBe('none');
+
+        expect(sidebarLinks[0].classList.contains('selected')).toBe(true);
+        expect(sidebarLinks[1].classList.contains('selected')).toBe(false);
+        expect(sidebarLinks[2].classList.contains('selected')).toBe(false);
+    });
+
+    it('should highlight the selected sidebar link and display the correct section when clicked', () => {
+
+        document.dispatchEvent(new Event('DOMContentLoaded'));
+
+        sidebarLinks[0].click();
+
+        expect(contentSections[0].style.display).toBe('flex');
+        expect(contentSections[1].style.display).toBe('none');
+        expect(contentSections[2].style.display).toBe('none');
+
+        expect(sidebarLinks[0].classList.contains('selected')).toBe(true);
+        expect(sidebarLinks[1].classList.contains('selected')).toBe(false);
+        expect(sidebarLinks[2].classList.contains('selected')).toBe(false);
+
+        sidebarLinks[1].click();
+
+        expect(contentSections[0].style.display).toBe('none');
+        expect(contentSections[1].style.display).toBe('flex');
+        expect(contentSections[2].style.display).toBe('none');
+
+        expect(sidebarLinks[0].classList.contains('selected')).toBe(false);
+        expect(sidebarLinks[1].classList.contains('selected')).toBe(true);
+        expect(sidebarLinks[2].classList.contains('selected')).toBe(false);
+
+        sidebarLinks[2].click();
+
+        expect(contentSections[0].style.display).toBe('none');
+        expect(contentSections[1].style.display).toBe('none');
+        expect(contentSections[2].style.display).toBe('flex');
+
+        expect(sidebarLinks[0].classList.contains('selected')).toBe(false);
+        expect(sidebarLinks[1].classList.contains('selected')).toBe(false);
+        expect(sidebarLinks[2].classList.contains('selected')).toBe(true);
+    });
+
 
 });
 
@@ -555,9 +625,6 @@ describe('User Page', () => {
             expect(users[0].userName).toBe('JohnDoe');
         });
     });
-    
-    
-    
 
 });
 
@@ -689,6 +756,230 @@ describe('Group Page', () => {
     });
 
     describe('Viewing Groups', () => {
+
+        beforeEach(() => {
+            ({renderGroups} = require('../script.js'));
+        });
+
+        it('should initialize with "No groups" when there are no groups in localStorage', () => {
+            localStorage.removeItem('groups');
+            
+            renderGroups();
+            
+            const tableRows = document.querySelectorAll('#groupsTable tbody tr');
+            
+            expect(tableRows.length).toBe(1);
+            expect(tableRows[0].textContent).toContain('No groups');
+        });
+
+        it('should render "No Groups" when there are no users', () => {
+
+            setLocalStorageItem('groups', JSON.stringify([]));
+        
+            renderGroups();
+
+            const tableRows = document.querySelectorAll('#groupsTable tbody tr');
+        
+            expect(tableRows.length).toBe(1);
+            expect(tableRows[0].textContent).toContain('No groups');
+        });
+
+        it('should add a new group to localStorage and update the UI', () => {
+            const groupName = document.querySelector('#groupName');
+
+            expect(groupName.value).toBe('');
+
+            groupName.value = "Group 1";
+
+            const submitBtn = document.querySelector('#submitCreateGroupModal');
+            submitBtn.click()
+    
+            const groups = JSON.parse(localStorage.getItem('groups'));
+            expect(groups.length).toBe(1);
+            expect(groups[0].groupName).toBe("Group 1");
+    
+            const tableRows = document.querySelectorAll('#groupsTable tbody tr');
+            expect(tableRows.length).toBe(1); 
+            expect(tableRows[0].textContent).toContain("Group 1");
+        });
+
+        it('should display "No users assigned" when a group is created but no users are assigned', () => {
+
+            localStorage.setItem('groups', JSON.stringify([{ id: 1, groupName: "Group 1", users: [] }]));
+            
+            renderGroups();
+            
+            const tableRows = document.querySelectorAll('#groupsTable tbody tr');
+            
+            expect(tableRows.length).toBe(1);
+            
+            expect(tableRows[0].textContent).toContain('Group 1');
+            expect(tableRows[0].textContent).toContain('No users assigned');
+        });
+
+        
+    });
+
+    describe('Add users to Groups', () => {
+
+        beforeEach(() => {
+            ({renderGroups} = require('../script.js'));
+        });
+
+
+        it('should display the "Add User to Group" modal and populate users dropdown', () => {
+            localStorage.setItem('groups', JSON.stringify([{ id: 1, groupName: "Group 1", users: [] }]));
+            localStorage.setItem('users', JSON.stringify([{ id: 1, userName: "User 1" }, { id: 2, userName: "User 2" }]));
+    
+            renderGroups();
+            const addUserBtn = document.querySelector('.addUser');
+            addUserBtn.click();
+    
+            expect(document.querySelector('.addUserToGroupModal').style.display).toBe('flex');
+            
+            const userOptions = document.querySelectorAll('#usersSelect option');
+            expect(userOptions.length).toBe(2);
+            expect(userOptions[0].textContent).toBe('User 1');
+            expect(userOptions[1].textContent).toBe('User 2');
+        });
+
+        it('should show "No users to add" when there are no users in local storage', () => {
+            localStorage.setItem('groups', JSON.stringify([{ id: 1, groupName: "Group 1", users: [] }]));
+            localStorage.removeItem('users'); 
+        
+            renderGroups();
+            const addUserBtn = document.querySelector('.addUser');
+            addUserBtn.click();
+        
+            expect(document.querySelector('.addUserToGroupModal').style.display).toBe('flex');
+        
+            const userOptions = document.querySelectorAll('#usersSelect option');
+            expect(userOptions.length).toBe(1);
+            expect(userOptions[0].textContent).toBe('No users to add');
+        });
+        
+
+        it('should add selected users to the group', () => {
+            localStorage.setItem('groups', JSON.stringify([{ id: 1, groupName: "Group 1", users: [] }]));
+            localStorage.setItem('users', JSON.stringify([{ id: 1, userName: "User 1" }, { id: 2, userName: "User 2" }]));
+    
+            renderGroups();
+            const addUserBtn = document.querySelector('.addUser');
+            addUserBtn.click();
+    
+            const userSelect = document.querySelector('#usersSelect');
+            userSelect.options[0].selected = true;
+            userSelect.options[1].selected = true;
+    
+            const addUsersToGroupBtn = document.querySelector('#addUsersToGroupForm button[type="submit"]');
+            addUsersToGroupBtn.click();
+    
+            const groups = JSON.parse(localStorage.getItem('groups'));
+            expect(groups[0].users).toEqual(['User 1', 'User 2']);
+    
+            const tableRows = document.querySelectorAll('#groupsTable tbody tr');
+            expect(tableRows[0].querySelector('.users-1').textContent).toContain('User 1, User 2');
+        });
+
+        it('prevents adding duplicate users to the same group', () => {
+
+            localStorage.setItem('groups', JSON.stringify([{ id: 1, groupName: "Group 1", users: ['User 1'] }]));
+            localStorage.setItem('users', JSON.stringify([{ id: 1, userName: "User 1" }, { id: 2, userName: "User 2" }]));
+    
+            renderGroups();
+            const addUserBtn = document.querySelector('.addUser');
+            addUserBtn.click();
+    
+            const userSelect = document.querySelector('#usersSelect');
+            userSelect.options[0].selected = true;
+            userSelect.options[1].selected = true;
+    
+            const addUsersToGroupBtn = document.querySelector('#addUsersToGroupForm button[type="submit"]');
+            addUsersToGroupBtn.click();
+    
+            const groups = JSON.parse(localStorage.getItem('groups'));
+            expect(groups[0].users).toEqual(['User 1', 'User 2']);
+    
+            const tableRows = document.querySelectorAll('#groupsTable tbody tr');
+            expect(tableRows[0].querySelector('.users-1').textContent).toContain('User 1, User 2');
+
+        });
+        
+
+        it('should close the modals when close buttons are clicked', () => {
+            const closeAddUserBtn = document.querySelector('#closeAddUser');
+    
+            closeAddUserBtn.click();
+            expect(document.querySelector('.addUserToGroupModal').style.display).toBe('none');
+    
+        });
+
+    });
+
+    describe('Remove users from Groups', () => {
+
+        beforeEach(() => {
+            ({renderGroups} = require('../script.js'));
+        });
+
+
+        it('should display the "Remove User from Group" modal and populate users dropdown', () => {
+            localStorage.setItem('groups', JSON.stringify([{ id: 1, groupName: "Group 1", users: ["User 1", "User 2"] }]));
+            renderGroups();
+            
+            const removeUserBtn = document.querySelector('.removeUser');
+            removeUserBtn.click();
+    
+            expect(document.querySelector('.removeUserFromGroup').style.display).toBe('flex');
+            
+            const userOptions = document.querySelectorAll('#usersSelectRemove option');
+            expect(userOptions.length).toBe(2);
+            expect(userOptions[0].textContent).toBe('User 1');
+            expect(userOptions[1].textContent).toBe('User 2');
+        });
+
+        it('should show "No users to remove" when there are no users in the group', () => {
+            localStorage.setItem('groups', JSON.stringify([{ id: 1, groupName: "Group 1", users: [] }]));
+        
+            renderGroups();
+            const removeUserBtn = document.querySelector('.removeUser');
+            removeUserBtn.click();
+        
+            expect(document.querySelector('.removeUserFromGroup').style.display).toBe('flex');
+        
+            const userOptions = document.querySelectorAll('#usersSelectRemove option');
+            expect(userOptions.length).toBe(1);
+            expect(userOptions[0].textContent).toBe('No users to remove');
+        });
+        
+
+        it('should remove selected users from the group', () => {
+
+            localStorage.setItem('groups', JSON.stringify([{ id: 1, groupName: "Group 1", users: ["User 1", "User 2"] }]));
+            renderGroups();
+            
+            const removeUserBtn = document.querySelector('.removeUser');
+            removeUserBtn.click();
+    
+            const userSelect = document.querySelector('#usersSelectRemove');
+            userSelect.options[0].selected = true;
+    
+            const removeUsersFromGroupBtn = document.querySelector('#removeUserFromGroup button[type="submit"]');
+            removeUsersFromGroupBtn.click();
+    
+            const groups = JSON.parse(localStorage.getItem('groups'));
+            expect(groups[0].users).toEqual(['User 2']);
+    
+            const tableRows = document.querySelectorAll('#groupsTable tbody tr');
+            expect(tableRows[0].querySelector('.users-1').textContent).toContain('User 2');
+        });
+
+        it('should close the modals when close buttons are clicked', () => {
+            const closeRemoveUserBtn = document.querySelector('#closeRemoveUser');
+    
+            closeRemoveUserBtn.click();
+            expect(document.querySelector('.removeUserFromGroup').style.display).toBe('none');
+        });
 
     });
 

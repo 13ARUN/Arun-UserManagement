@@ -9,31 +9,26 @@ logo.addEventListener('click', () => {
 
 document.addEventListener("DOMContentLoaded", function () {
     const sidebarLinks = document.querySelectorAll('.nav_list a');
-
     const contentSections = document.querySelectorAll('.home_content');
 
     sidebarLinks.forEach(link => {
-
         link.addEventListener('click', function (event) {
-            event.preventDefault(); // Prevent default link behavior
+            event.preventDefault();
 
             sidebarLinks.forEach(link => link.classList.remove('selected'));
-
             contentSections.forEach(section => section.style.display = 'none');
 
-            const targetSection = document.querySelector(this.getAttribute('href'));
-            targetSection.style.display = 'flex';
-
+            document.querySelector(this.getAttribute('href')).style.display = 'flex';
             this.classList.add('selected');
         });
     });
 
-    // Display only the first section on page load
     contentSections.forEach((section, index) => {
         section.style.display = index === 0 ? 'flex' : 'none';
     });
 });
 
+//* user js
 
 const createUserModal = document.querySelector('.addUserModal'),
     createUserBtn = document.querySelector('#addUser'),
@@ -136,8 +131,6 @@ function deleteUser(userId) {
     renderUsers();
 
 }
-
-
 const updateUserModal = document.querySelector('.updateUserModal');
 const updateUserForm = document.querySelector('#updateUserForm');
 const updateUsername = document.querySelector('#updateUsername');
@@ -183,39 +176,40 @@ cancelEditBtn.addEventListener('click', () => {
 
 
 
+//* group js
 
-
-
+// Create Group Modal
 const createGroupModal = document.querySelector('.createGroupModal');
 const createGroupBtn = document.querySelector('#createGroup');
-const closebtn = document.querySelector('#closeCreateGroupModal');
-const submitbtn = document.querySelector('#submitCreateGroupModal');
+const closeCreateGroupModalBtn = document.querySelector('#closeCreateGroupModal');
+const submitCreateGroupModalBtn = document.querySelector('#submitCreateGroupModal');
+const groupNameInput = document.querySelector('#groupName');
 
+function showModal(modal) {
+    modal.style.display = 'flex';
+}
 
+function hideModal(modal) {
+    modal.style.display = 'none';
+}
 
-createGroupBtn.addEventListener('click', () => {
-    createGroupModal.style.display = 'flex';
-});
+createGroupBtn.addEventListener('click', () => showModal(createGroupModal));
+closeCreateGroupModalBtn.addEventListener('click', () => hideModal(createGroupModal));
 
-closebtn.addEventListener('click', () => {
-    createGroupModal.style.display = 'none';
-});
-
-submitbtn.addEventListener('click', () => {
+submitCreateGroupModalBtn.addEventListener('click', () => {
     const group = {
         id: generateGroupId(),
-        groupName: groupName.value,
+        groupName: groupNameInput.value,
+        users: [] // Initialize with an empty users array
     };
 
     const groups = localStorage.getItem('groups') ? JSON.parse(localStorage.getItem('groups')) : [];
     groups.push(group);
     localStorage.setItem('groups', JSON.stringify(groups));
 
-    groupName.value = "";
-
+    groupNameInput.value = "";
     renderGroups();
-
-    createGroupModal.style.display = 'none';
+    hideModal(createGroupModal);
 });
 
 function generateGroupId() {
@@ -223,8 +217,7 @@ function generateGroupId() {
     return groups.length ? groups[groups.length - 1].id + 1 : 1;
 }
 
-document.addEventListener('DOMContentLoaded', renderGroups);
-
+// Render Groups
 function renderGroups() {
     const groupsTableBody = document.querySelector('#groupsTable tbody');
     const groups = localStorage.getItem('groups') ? JSON.parse(localStorage.getItem('groups')) : [];
@@ -232,18 +225,16 @@ function renderGroups() {
     groupsTableBody.innerHTML = '';
 
     if (groups.length === 0) {
-        const noUsersRow = document.createElement('tr');
-        noUsersRow.innerHTML = `
-            <td colspan="4" class="no-users">No groups</td>
-        `;
-        groupsTableBody.appendChild(noUsersRow);
+        const noGroupsRow = document.createElement('tr');
+        noGroupsRow.innerHTML = '<td colspan="4" class="no-users">No groups</td>';
+        groupsTableBody.appendChild(noGroupsRow);
     } else {
         groups.forEach(group => {
             const formattedGroupId = `G${String(group.id).padStart(3, '0')}`;
 
             const row = document.createElement('tr');
             row.id = `GroupRow-${group.id}`;
-            const usersContent = (group.users && group.users.length > 0) ? group.users.join(', ') : 'No users assigned';
+            const usersContent = group.users.length ? group.users.join(', ') : 'No users assigned';
             row.innerHTML = `
                 <td class="groupId-${group.id}">${formattedGroupId}</td>
                 <td class="groupName-${group.id}">${group.groupName}</td>
@@ -255,140 +246,111 @@ function renderGroups() {
             `;
             groupsTableBody.appendChild(row);
 
-            const addButton = row.querySelector('.addUser');
-            const removeButton = row.querySelector('.removeUser');
-
-            addButton.addEventListener('click', () => addUser(group.id));
-            removeButton.addEventListener('click', () => removeUser(group.id));
+            row.querySelector('.addUser').addEventListener('click', () => addUser(group.id));
+            row.querySelector('.removeUser').addEventListener('click', () => removeUser(group.id));
         });
     }
 }
 
+document.addEventListener('DOMContentLoaded', renderGroups);
 
+// Add User to Group Modal
 const addUserToGroupModal = document.querySelector('.addUserToGroupModal');
 const usersSelect = document.querySelector('#usersSelect');
 const addUsersToGroupForm = document.querySelector('#addUsersToGroupForm');
 const addUserSubmitBtn = document.querySelector('#addUsersToGroupForm button[type="submit"]');
-const closeAddUserBtn = document.querySelector('#closeAddUser')
+const closeAddUserBtn = document.querySelector('#closeAddUser');
 
-closeAddUserBtn.addEventListener('click', () => {
-    addUserToGroupModal.style.display = 'none';
-});
+closeAddUserBtn.addEventListener('click', () => hideModal(addUserToGroupModal));
 
+// Add User to Group Modal
 function addUser(groupId) {
-    addUserToGroupModal.style.display = 'flex';
+    showModal(addUserToGroupModal);
 
     const groups = localStorage.getItem('groups') ? JSON.parse(localStorage.getItem('groups')) : [];
-
-    addUserSubmitBtn.innerHTML = `Add users to ${groups[groupId-1].groupName}`;
+    const group = groups.find(g => g.id === groupId);
+    addUserSubmitBtn.innerHTML = `Add users to ${group.groupName}`;
 
     const users = localStorage.getItem('users') ? JSON.parse(localStorage.getItem('users')) : [];
-    
-    usersSelect.innerHTML = '';
-
-    users.forEach(user => {
-        const option = document.createElement('option');
-        option.value = user.id;
-        option.textContent = user.userName;
-        usersSelect.appendChild(option);
-    });
+    if (users.length === 0) {
+        usersSelect.innerHTML = '<option>No users to add</option>';
+        addUserSubmitBtn.disabled = true; // Disable the submit button if no users
+    } else {
+        usersSelect.innerHTML = users.map(user => `<option value="${user.id}">${user.userName}</option>`).join('');
+        addUserSubmitBtn.disabled = false; // Enable the submit button if users are available
+    }
 
     addUsersToGroupForm.onsubmit = (event) => {
         event.preventDefault();
 
         const selectedUserNames = Array.from(usersSelect.selectedOptions).map(option => option.textContent);
-
-        const groups = localStorage.getItem('groups') ? JSON.parse(localStorage.getItem('groups')) : [];
-        const group = groups.find(g => g.id === groupId);
-
-        if (group) {
-            if (!group.users) {
-                group.users = [];
+        const updatedGroups = groups.map(g => {
+            if (g.id === groupId) {
+                if (!g.users) g.users = [];
+                selectedUserNames.forEach(userName => {
+                    if (!g.users.includes(userName)) g.users.push(userName);
+                });
             }
+            return g;
+        });
 
-            selectedUserNames.forEach(userId => {
-                if (!group.users.includes(userId)) {
-                    group.users.push(userId);
-                }
-            });
-
-            localStorage.setItem('groups', JSON.stringify(groups));
-            renderGroups();
-        }
-
-        addUserToGroupModal.style.display = 'none';
+        localStorage.setItem('groups', JSON.stringify(updatedGroups));
+        renderGroups();
+        hideModal(addUserToGroupModal);
     };
 }
 
-
+// Remove User from Group Modal
 const removeUserFromGroupModal = document.querySelector('.removeUserFromGroup');
 const userSelect = document.querySelector('#usersSelectRemove');
 const removeUsersFromGroupForm = document.querySelector('#removeUserFromGroup');
 const closeRemoveUserBtn = document.querySelector('#closeRemoveUser');
-const removeUserSubmitBtn = document.querySelector('#removeUserFromGroup button[type="submitRemoveUser"]');
+const removeUserSubmitBtn = document.querySelector('#removeUserFromGroup button[type="submit"]');
+
+closeRemoveUserBtn.addEventListener('click', () => hideModal(removeUserFromGroupModal));
 
 function removeUser(groupId) {
-    removeUserFromGroupModal.style.display = 'flex';
+    showModal(removeUserFromGroupModal);
 
     const groups = localStorage.getItem('groups') ? JSON.parse(localStorage.getItem('groups')) : [];
     const group = groups.find(g => g.id === groupId);
 
     if (group) {
         removeUserSubmitBtn.innerHTML = `Remove users from ${group.groupName}`;
-
-        userSelect.innerHTML = '';
-
-        if (group.users && group.users.length > 0) {
-            group.users.forEach(user => {
-                const option = document.createElement('option');
-                option.textContent = user; 
-                userSelect.appendChild(option);
-            });
+        
+        if (group.users.length === 0) {
+            userSelect.innerHTML = '<option>No users to remove</option>';
+            removeUserSubmitBtn.disabled = true; // Disable the submit button if no users to remove
+        } else {
+            userSelect.innerHTML = group.users.map(user => `<option>${user}</option>`).join('');
+            removeUserSubmitBtn.disabled = false; // Enable the submit button if users are available
         }
 
         removeUsersFromGroupForm.onsubmit = (event) => {
             event.preventDefault();
 
-            const selectedUserNames = Array.from(userSelect.selectedOptions).map(option => option.textContent);
-
+            const selectedUsers = Array.from(userSelect.selectedOptions).map(option => option.textContent);
             const updatedGroups = groups.map(g => {
                 if (g.id === groupId) {
-                    g.users = g.users.filter(user => !selectedUserNames.includes(user));
+                    g.users = g.users.filter(user => !selectedUsers.includes(user));
                 }
                 return g;
             });
 
             localStorage.setItem('groups', JSON.stringify(updatedGroups));
-
             renderGroups();
-
-            removeUserFromGroupModal.style.display = 'none';
+            hideModal(removeUserFromGroupModal);
         };
     }
 }
-
-closeRemoveUserBtn.addEventListener('click', () => {
-    removeUserFromGroupModal.style.display = 'none';
-});
-
-
-
-
-// module.exports = {
-//     renderGroups
-// };
-
-
-
-
-
 
 
 
 module.exports = {
     renderUsers,
     deleteUser,
-    editUser
+    editUser,
+    renderGroups
 };
 
 
