@@ -3,6 +3,8 @@ const path = require('path');
 
 describe('HTML', () => {
 
+    //* Helper Functions
+
     function checkElement(selector, attributes) {
         const element = document.querySelector(selector);
         expect(element).toBeTruthy();
@@ -79,7 +81,6 @@ describe('HTML', () => {
 
         jest.resetModules();
 
-       
     });
 
     describe('Title and Body', () => {
@@ -150,7 +151,7 @@ describe('HTML', () => {
 
         });
 
-        it('Add User', () => {
+        it('Add User Modal', () => {
 
             checkContains('.addUserModal', ['form','#addUserForm','#closeAddUserModal','#addUserForm h3','#addUserForm label','#addUserForm input','.addUserModalBtns',]);
 
@@ -196,7 +197,7 @@ describe('HTML', () => {
 
         });
 
-        it('Topic', () => {
+        it('Topic User List', () => {
 
             checkContains('.topic',['#userList','.createBtn2']);
             checkTextContent('#userList', "Users List");
@@ -223,7 +224,7 @@ describe('HTML', () => {
 
         });
 
-        it('Update User', () => {
+        it('Update User Modal', () => {
 
             checkContains('.updateUserModal', ['#updateUserForm']);
             checkElement('.updateUserModal',{style: "display:none;",});
@@ -274,7 +275,7 @@ describe('HTML', () => {
             checkTextContent('#groupPage h1', "Group Management");
         });
     
-        it('Add Group', () => {
+        it('Create Group Modal', () => {
             checkContains('.createGroupModal', ['#createGroupForm', '#closeCreateGroupModal', '#createGroupForm h3', '#createGroupForm label', '#createGroupForm input', '#submitCreateGroupModal']);
     
             checkStyles('.createGroupModal', { display: 'none' });
@@ -301,7 +302,7 @@ describe('HTML', () => {
     
         });
     
-        it('Topic', () => {
+        it('Topic Group List', () => {
             checkContains('#groupPage .topic', ['#groupList', '#groupPage .topic .createBtn2']);
             checkTextContent('#groupList', "Groups List");
             checkContains('#groupPage .topic .createBtn2', ['#createGroup', '.createBtn2 #createGroup i']);
@@ -322,7 +323,7 @@ describe('HTML', () => {
             checkInnerHtml('#groupsTable tbody', '');
         });
     
-        it('Add Users to Group', () => {
+        it('Add Users to Group Modal', () => {
 
             checkContains('.addUserToGroupModal', ['#addUsersToGroupForm', '#closeAddUser', '#addUsersToGroupForm h3', '#addUsersToGroupForm label', '#addUsersToGroupForm select', '#addUsersToGroupForm button']);
             checkStyles('.addUserToGroupModal', { display: 'none' });
@@ -339,7 +340,7 @@ describe('HTML', () => {
             checkElement('#addUsersToGroupForm button[type="submit"]', {});
         });
 
-        it('Remove Users from Group', () => {
+        it('Remove Users from Group Modal', () => {
 
             checkContains('.removeUserFromGroup', ['#removeUserFromGroup', '#closeRemoveUser', '#removeUserFromGroup h3', '#removeUserFromGroup label', '#removeUserFromGroup select', '#removeUserFromGroup button']);
             checkStyles('.removeUserFromGroup', { display: 'none' });
@@ -361,7 +362,6 @@ describe('HTML', () => {
     
 
     });
-    
 
     describe('Roles Page', () => {
 
@@ -370,7 +370,7 @@ describe('HTML', () => {
             checkTextContent('#rolePage h1', "Role Management");
         });
 
-        it('Create Role Form', () => {
+        it('Create Role Modal', () => {
             checkContains('.createRoleModal', ['#createRoleForm', '#closeCreateRoleModal', '#createRoleForm h3', '#createRoleForm label', '#createRoleForm input', '#createRoleForm textarea', '#createRoleForm button']);
             checkStyles('.createRoleModal', { display: 'none' });
 
@@ -394,7 +394,7 @@ describe('HTML', () => {
             checkTextContent('#submitCreateRoleModal', "Create Role");
         });
 
-        it('Roles List Elements', () => {
+        it('Topic Role List', () => {
             checkContains('#roleListdiv', ['#roleList', '.createbtn']);
             checkTextContent('#roleList', "Roles List");
 
@@ -421,7 +421,7 @@ describe('HTML', () => {
             checkInnerHtml('#rolesTable tbody', '');
         });
 
-        it('Assign Users to Role Form', () => {
+        it('Assign Users to Role Modal', () => {
             checkContains('.assignRoleToUserModal', ['#assignRolesToUserForm', '#closeAssignUsersModal', '#assignRolesToUserForm h3', '#assignRolesToUserForm label', '#assignRolesToUserForm select', '#assignRolesToUserForm button']);
             checkStyles('.assignRoleToUserModal', { display: 'none' });
 
@@ -442,7 +442,7 @@ describe('HTML', () => {
             checkTextContent('#assignRolesToUserForm button[type="submit"]', "Assign Role to Users");
         });
 
-        it('Assign Groups to Role Form', () => {
+        it('Assign Groups to Role Modal', () => {
             checkContains('.assignRoleToGroupModal', ['#assignRolesToGroupForm', '#closeAssignGroupsModal', '#assignRolesToGroupForm h3', '#assignRolesToGroupForm label', '#assignRolesToGroupForm select', '#assignRolesToGroupForm button']);
             checkStyles('.assignRoleToGroupModal', { display: 'none' });
 
@@ -463,7 +463,7 @@ describe('HTML', () => {
             checkTextContent('#assignRolesToGroupForm button[type="submit"]', "Assign Role to Groups");
         });
 
-        it('Role Assignments Elements', () => {
+        it('Topic Role Assignments', () => {
             checkContains('#roleAssignmentsdiv', ['#roleAssignments', '.view']);
             checkTextContent('#roleAssignments', "Role Assignments");
 

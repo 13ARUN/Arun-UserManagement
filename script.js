@@ -1,6 +1,20 @@
 
-// const searchInput = document.getElementById('searchRole');
-// searchInput.addEventListener('input', handleSearch);
+
+
+function showNotification(message) {
+    const notification = document.getElementById('notification');
+    notification.textContent = message;
+    notification.style.display = 'block';
+
+    setTimeout(() => {
+        notification.style.opacity = '0';
+        setTimeout(() => {
+            notification.style.display = 'none';
+            notification.style.opacity = '1';
+        }, 500); 
+    }, 3000); 
+}
+
 
 
 const sidebar = document.querySelector('.sidebar');
@@ -16,6 +30,10 @@ document.addEventListener('DOMContentLoaded', renderGroups);
 document.addEventListener('DOMContentLoaded', () => {
     renderRoles();
     renderRoleAssignments();
+
+    const searchInput = document.getElementById('searchRole');
+    searchInput.addEventListener('input', handleSearch);
+    document.getElementById('searchRoleAssignments').addEventListener('input', handleRoleAssignmentsSearch);
 });
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -32,6 +50,8 @@ document.addEventListener("DOMContentLoaded", function () {
             document.querySelector(this.getAttribute('href')).style.display = 'flex';
             this.classList.add('selected');
         });
+
+        
     });
 
     contentSections.forEach((section, index) => {
@@ -107,6 +127,7 @@ function AddUser() {
 
     renderUsers();
     toggleModal(createUserModal, 'none');
+    showNotification('User created successfully!');
 }
 
 function clearInputFields(inputs) {
@@ -152,10 +173,20 @@ function createUserRow(user) {
 }
 
 function deleteUser(userId) {
-    const users = getUsersFromStorage();
-    const updatedUsers = users.filter(user => user.id !== userId);
-    saveUsersToStorage(updatedUsers);
-    renderUsers();
+    // Show confirmation dialog
+    const confirmed = window.confirm("Are you sure you want to delete this user?");
+
+    if (confirmed) {
+        // If confirmed, proceed with deletion
+        const users = getUsersFromStorage();
+        const updatedUsers = users.filter(user => user.id !== userId);
+        saveUsersToStorage(updatedUsers);
+        renderUsers();
+        showNotification('User deleted successfully!');
+    } else {
+        // If canceled, do nothing
+        console.log("User deletion canceled");
+    }
 }
 
 function editUser(userId) {
@@ -189,8 +220,8 @@ function updateUser(userId) {
     toggleModal(updateUserModal, 'none');
     updateUserForm.reset();
     renderUsers();
+    showNotification('User updated successfully!');
 }
-
 
 //* group js
 
@@ -246,6 +277,7 @@ function CreateGroup() {
 
     groupNameInput.value = "";
     renderGroups();
+    showNotification('Group created successfully!');
     hideModal(createGroupModal);
 }
 
@@ -315,6 +347,7 @@ function addUser(groupId) {
 
         localStorage.setItem('groups', JSON.stringify(updatedGroups));
         renderGroups();
+        showNotification('User(s) added to Group successfully!');
         hideModal(addUserToGroupModal);
     };
 }
@@ -353,6 +386,7 @@ function removeUser(groupId) {
 
         localStorage.setItem('groups', JSON.stringify(updatedGroups));
         renderGroups();
+        showNotification('User(s) removed from Group successfully!');
         hideModal(removeUserFromGroupModal);
     };
 }
@@ -407,6 +441,7 @@ function createRole() {
     roleNameInput.value = "";
     roleDescriptionInput.value = "";
     renderRoles();
+    showNotification('Role created successfully!');
     hideModal(createRoleModal);
 }
 
@@ -442,7 +477,13 @@ function renderRoles() {
             assignUserBtn.addEventListener('click', () => assignRoleToUser(role.id));
             assignGroupBtn.addEventListener('click', () => assignRoleToGroup(role.id));
         });
+
+        const noResultsMessage = document.querySelector('#noResultsMessage');
+            if (noResultsMessage) {
+                noResultsMessage.remove();
+            }
     }
+
 }
 
 function assignRoleToUser(roleId) {
@@ -466,6 +507,7 @@ function assignRoleToUser(roleId) {
         
         localStorage.setItem('roles', JSON.stringify(roles));
         renderRoleAssignments();
+        showNotification('Role assigned for User(s) successfully!');
         hideModal(assignRoleToUserModal);
     };
 }
@@ -491,6 +533,7 @@ function assignRoleToGroup(roleId) {
         
         localStorage.setItem('roles', JSON.stringify(roles));
         renderRoleAssignments();
+        showNotification('Role assigned for Group(s) successfully!');
         hideModal(assignRoleToGroupModal);
     };
 }
@@ -526,59 +569,111 @@ function renderRoleAssignments() {
     }
 }
 
+function handleSearch(event) {
+    const searchValue = event.target.value.toLowerCase();
+    const roles = JSON.parse(localStorage.getItem('roles')) || [];
+    const filteredRoles = roles.filter(role => role.name.toLowerCase().includes(searchValue));
+    const rolesTableBody = document.querySelector('#rolesTable tbody');
+
+    // Clear existing rows
+    rolesTableBody.innerHTML = '';
+
+    if (filteredRoles.length === 0) {
+        // Display "No search results found" message
+        const noResultsMessage = document.createElement('tr');
+        noResultsMessage.id = 'noResultsMessage';
+        noResultsMessage.innerHTML = '<td colspan="3">No search results found</td>';
+        rolesTableBody.appendChild(noResultsMessage);
+    } else {
+        filteredRoles.forEach(role => {
+            const row = document.createElement('tr');
+            const formattedRoleId = `RL${String(role.id).padStart(3, '0')}`;
+            row.innerHTML = `
+                <td class="roleId-${role.id}">${formattedRoleId}</td>
+                <td class="roleName-${role.id}">${role.name}</td>
+                <td class="roleDescription-${role.id}">${role.description}</td>
+                <td class="actions" id="roleActions-${user.id}">
+                    <button title="assignUser" class="assignUser"><i class="fa-solid fa-user"></i> Assign User</button>
+                    <button title="assignGroup" class="assignGroup"><i class="fa-solid fa-user-group"></i> Assign Group</button>
+                </td>
+            `;
+            rolesTableBody.appendChild(row);
+
+            const assignUserBtn = row.querySelector('.assignUser');
+            const assignGroupBtn = row.querySelector('.assignGroup');
+
+            assignUserBtn.addEventListener('click', () => assignRoleToUser(role.id));
+            assignGroupBtn.addEventListener('click', () => assignRoleToGroup(role.id));
+        });
+    }
+
+}
+
+function handleRoleAssignmentsSearch(event) {
+
+    const searchValue = event.target.value.toLowerCase();
+    const roleAssignments = JSON.parse(localStorage.getItem('roles')) || [];
+    const filteredAssignments = roleAssignments.filter(assignment =>
+        assignment.name.toLowerCase().includes(searchValue)
+    );
+    const assignmentsTableBody = document.querySelector('#roleAssignmentsTable tbody');
+
+    // Clear existing rows
+    assignmentsTableBody.innerHTML = '';
+
+    if (filteredAssignments.length === 0) {
+        // Display "No search results found" message
+        const noResultsMessage = document.createElement('tr');
+        noResultsMessage.id = 'noResultsMessage';
+        noResultsMessage.innerHTML = '<td colspan="3">No search results found</td>';
+        assignmentsTableBody.appendChild(noResultsMessage);
+    } else {
+        filteredAssignments.forEach(assignment => {
+            const assignedUsers = assignment.assignedUsers ;
+            const assignedGroups = assignment.assignedGroups || [];
+            const usersContent = assignedUsers.length ? assignedUsers.join(', ') : 'No users assigned';
+            const groupsContent = assignedGroups.length ? assignedGroups.join(', ') : 'No groups assigned';
+
+
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="roleName-${assignment.roleId}">${assignment.name}</td>
+                <td class="assignedUsers-${assignment.roleId}">${usersContent}</td>
+                <td class="assignedGroups-${assignment.roleId}">${groupsContent}</td>
+            `;
+            assignmentsTableBody.appendChild(row);
+        });
+    }
+}
+
+
+  
+
+
+
+
+
 //* exports
 
 module.exports = {
     renderUsers,
     deleteUser,
     editUser,
+    updateUser,
     renderGroups,
     renderRoles,
-    renderRoleAssignments
+    renderRoleAssignments,
+    showNotification,
+    handleSearch
 };
 
 
 
 
 
-// function handleSearch(event) {
-//     const searchValue = event.target.value.toLowerCase();
-//     const roles = JSON.parse(localStorage.getItem('roles')) || [];
-//     const filteredRoles = roles.filter(role => role.name.toLowerCase().includes(searchValue));
-//     const rolesTableBody = document.querySelector('#rolesTable tbody');
 
-//     // Clear existing rows
-//     rolesTableBody.innerHTML = '';
 
-//     if (filteredRoles.length === 0) {
-//         // Display "No search results found" message
-//         const noResultsMessage = document.createElement('tr');
-//         noResultsMessage.id = 'noResultsMessage';
-//         noResultsMessage.innerHTML = '<td colspan="3">No search results found</td>';
-//         rolesTableBody.appendChild(noResultsMessage);
-//     } else {
-//         filteredRoles.forEach(role => {
-//             const row = document.createElement('tr');
-//             const formattedRoleId = `RL${String(role.id).padStart(3, '0')}`;
-//             row.innerHTML = `
-//                 <td class="roleId-${role.id}">${formattedRoleId}</td>
-//                 <td class="roleName-${role.id}">${role.name}</td>
-//                 <td class="roleDescription-${role.id}">${role.description}</td>
-//                 <td class="actions" id="roleActions-${user.id}">
-//                     <button title="assignUser" class="assignUser"><i class="fa-solid fa-user"></i> Assign User</button>
-//                     <button title="assignGroup" class="assignGroup"><i class="fa-solid fa-user-group"></i> Assign Group</button>
-//                 </td>
-//             `;
-//             rolesTableBody.appendChild(row);
-//         });
-//     }
 
-// }
-
-// const noResultsMessage = document.querySelector('#noResultsMessage');
-// if (noResultsMessage) {
-//     noResultsMessage.remove();
-// }
 
 
 

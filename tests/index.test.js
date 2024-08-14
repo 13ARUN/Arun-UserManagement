@@ -27,6 +27,13 @@ const clearLocalStorage = () => {
     localStorage.clear();
 };
 
+function checkNotification(expectedText) {
+
+    const notification = document.getElementById('notification');
+    expect(notification.textContent).toBe(expectedText);
+    
+}
+
 
 describe('Dynamic sidebar', () => {
 
@@ -385,6 +392,16 @@ describe('User Page', () => {
         });
 
 
+        it('should display success message when user is created', () => {
+
+            const submitBtn = document.querySelector('#submitAddUserModal');
+            submitBtn.click();
+        
+            checkNotification('User created successfully!');
+        });
+        
+
+
         
 
         
@@ -473,25 +490,29 @@ describe('User Page', () => {
     });
 
     describe('Deleting users', () => {
-
         let users;
+        let deleteUser;
+        let renderUsers;
     
         beforeEach(() => {
-            // Setup initial state for each test
 
-            ({deleteUser,renderUsers} = require('../script.js'));
+            jest.spyOn(window, 'confirm').mockImplementation(() => true);
+    
+            ({ deleteUser, renderUsers } = require('../script.js'));
             users = [
                 { id: 1, userName: 'JohnDoe', email: 'john@example.com', firstName: 'John', lastName: 'Doe' },
                 { id: 2, userName: 'JaneDoe', email: 'jane@example.com', firstName: 'Jane', lastName: 'Doe' }
             ];
             setLocalStorageItem('users', JSON.stringify(users));
-
+    
             renderUsers();
         });
-
+    
+        afterEach(() => {
+            window.confirm.mockRestore();
+        });
     
         it('should delete a user from the list', () => {
-
             deleteUser(1);
     
             const updatedUsers = getLocalStorageItem('users');
@@ -502,23 +523,19 @@ describe('User Page', () => {
             expect(userRow).toBeNull();
         });
     
-
-    
         it('should update the user list UI after deletion', () => {
-
             deleteUser(2);
     
             const updatedUsers = getLocalStorageItem('users');
             expect(updatedUsers).toHaveLength(1);
     
-
             const deletedUserRow = document.querySelector('#UserRow-2');
             expect(deletedUserRow).toBeNull();
         });
     
         it('should display "No users" message when the last user is deleted', () => {
             deleteUser(1);
-            deleteUser(2); 
+            deleteUser(2);
     
             const updatedUsers = getLocalStorageItem('users');
             expect(updatedUsers).toHaveLength(0);
@@ -528,10 +545,29 @@ describe('User Page', () => {
             expect(noUsersMessage.textContent).toBe('No users');
         });
 
+        it('should not delete a user if cancel is clicked on the confirmation dialog', () => {
+
+            jest.spyOn(window, 'confirm').mockImplementation(() => false);
+    
+            deleteUser(1);
+    
+            const updatedUsers = getLocalStorageItem('users');
+            expect(updatedUsers).toHaveLength(2);
+    
+            const userRow = document.querySelector('#UserRow-1');
+            expect(userRow).not.toBeNull();
+        });
+
+        it('should display success message when user is deleted', () => {
+
+            deleteUser(1);
+        
+            checkNotification('User deleted successfully!');
+        });
+    
         it('should work with delete button event listener', () => {
-
             let deleteBtn1 = document.querySelector('#userActions-1 button[title="delete"]');
-
+    
             deleteBtn1.click();
     
             const updatedUsers = getLocalStorageItem('users');
@@ -541,13 +577,16 @@ describe('User Page', () => {
             const userRow = document.querySelector('#UserRow-1');
             expect(userRow).toBeNull();
         });
+
+
     });
+    
 
     describe('Editing users', () => {
         let users;
     
         beforeEach(() => {
-            ({editUser,renderUsers} = require('../script.js'));
+            ({editUser,updateUser,renderUsers} = require('../script.js'));
     
             users = [
                 { id: 1, userName: 'JohnDoe', email: 'john@example.com', firstName: 'John', lastName: 'Doe' },
@@ -616,6 +655,16 @@ describe('User Page', () => {
             expect(users[0].userName).toBe('JohnDoe');
         });
 
+        it('should display success message when user is updated', () => {
+
+            updateUser(1);
+        
+            checkNotification('User updated successfully!');
+        });
+
+        
+       
+
         it('should work with edit button event listener', () => {
 
             const updateUserModal = document.querySelector('.updateUserModal');
@@ -629,10 +678,10 @@ describe('User Page', () => {
             expect(updateUserModal.style.display).toBe('flex');
 
         });
+       
     });
 
 });
-
 
 describe('Group Page', () => {
 
@@ -714,7 +763,7 @@ describe('Group Page', () => {
             groupName.value = "Group 1";
 
             const submitBtn = document.querySelector('#submitCreateGroupModal');
-            submitBtn.click()
+            submitBtn.click();
 
             expect(groupName.value).toBe('');
 
@@ -752,9 +801,14 @@ describe('Group Page', () => {
 
             expect(groupsUpdated[0].groupName).toBe('Group 1');
             expect(groupsUpdated[1].groupName).toBe('Group 2');
+        });
 
+        it('should display success message when group is created', () => {
 
-
+            const submitBtn = document.querySelector('#submitCreateGroupModal');
+            submitBtn.click()
+        
+            checkNotification("Group created successfully!");
         });
 
 
@@ -912,6 +966,25 @@ describe('Group Page', () => {
             expect(tableRows[0].querySelector('.users-1').textContent).toContain('User 1, User 2');
 
         });
+
+        it('should display success message when users are added to group', () => {
+
+            setLocalStorageItem('groups', JSON.stringify([{ id: 1, groupName: "Group 1", users: ['User 1'] }]));
+            setLocalStorageItem('users', JSON.stringify([{ id: 1, userName: "User 1" }, { id: 2, userName: "User 2" }]));
+    
+            renderGroups();
+            const addUserBtn = document.querySelector('.addUser');
+            addUserBtn.click();
+    
+            const userSelect = document.querySelector('#usersSelect');
+            userSelect.options[0].selected = true;
+            userSelect.options[1].selected = true;
+    
+            const addUsersToGroupBtn = document.querySelector('#addUsersToGroupForm button[type="submit"]');
+            addUsersToGroupBtn.click();
+
+            checkNotification("User(s) added to Group successfully!");
+        });
         
 
         it('should close the modals when close buttons are clicked', () => {
@@ -982,6 +1055,24 @@ describe('Group Page', () => {
             expect(tableRows[0].querySelector('.users-1').textContent).toContain('User 2');
         });
 
+        it('should display success message when users are removed to group', () => {
+
+            setLocalStorageItem('groups', JSON.stringify([{ id: 1, groupName: "Group 1", users: ["User 1", "User 2"] }]));
+            renderGroups();
+            
+            const removeUserBtn = document.querySelector('.removeUser');
+            removeUserBtn.click();
+    
+            const userSelect = document.querySelector('#usersSelectRemove');
+            userSelect.options[0].selected = true;
+    
+            const removeUsersFromGroupBtn = document.querySelector('#removeUserFromGroup button[type="submit"]');
+            removeUsersFromGroupBtn.click();
+
+
+            checkNotification("User(s) removed from Group successfully!" );
+        });
+
         it('should close the modals when close buttons are clicked', () => {
             const closeRemoveUserBtn = document.querySelector('#closeRemoveUser');
     
@@ -992,7 +1083,6 @@ describe('Group Page', () => {
     });
 
 });
-
 
 describe('Role Page', () => {
 
@@ -1116,6 +1206,14 @@ describe('Role Page', () => {
             expect(roles.length).toBe(2);
             expect(roles[0].name).toBe("Role 1");
             expect(roles[1].name).toBe("Role 2");
+        });
+
+        it('should display success message when role is created', () => {
+
+            const submitBtn = document.querySelector('#submitCreateRoleModal');
+            submitBtn.click();
+        
+            checkNotification("Role created successfully!");
         });
         
     });
@@ -1256,6 +1354,24 @@ describe('Role Page', () => {
             expect(roles[0].assignedUsers).toEqual(['User 1']);
             expect(roles[1].assignedUsers).toEqual(['User 2']);
         });
+
+        it('should display success message when users are assigned role ', () => {
+
+            setLocalStorageItem('roles', JSON.stringify([{ id: 1, name: "Role 1", description: "Description for Role 1", assignedUsers: [],assignedGroups: [] }]));
+            setLocalStorageItem('users', JSON.stringify([{ id: 1, userName: "User 1" }, { id: 2, userName: "User 2" }]));
+
+            renderRoles();
+            const assignUserBtn = document.querySelector('#roleActions-1 .assignUser');            assignUserBtn.click();
+
+            const userSelect = document.querySelector('#usersSelectRole');
+            userSelect.options[0].selected = true;
+            userSelect.options[1].selected = true;
+
+            const assignUsersToRoleBtn = document.querySelector('#assignRolesToUserForm button[type="submit"]');
+            assignUsersToRoleBtn.click();
+        
+            checkNotification("Role assigned for User(s) successfully!" );
+        });
         
 
         it('should close the modal when the close button is clicked', () => {
@@ -1330,6 +1446,25 @@ describe('Role Page', () => {
             expect(roles[0].assignedGroups).toEqual(['Group 1', 'Group 2']);
         });
 
+        it('should display success message when groups are assigned role ', () => {
+
+            setLocalStorageItem('roles', JSON.stringify([{ id: 1, name: "Role 1", description: "Description for Role 1",assignedUsers: [] ,assignedGroups: [] }]));
+            setLocalStorageItem('groups', JSON.stringify([{ id: 1, groupName: "Group 1" }, { id: 2, groupName: "Group 2" }]));
+
+            renderRoles();
+            const assignGroupBtn = document.querySelector('#roleActions-1 .assignGroup');
+            assignGroupBtn.click();
+
+            const groupSelect = document.querySelector('#groupsSelect');
+            groupSelect.options[0].selected = true;
+            groupSelect.options[1].selected = true;
+
+            const assignGroupsToRoleBtn = document.querySelector('#assignRolesToGroupForm button[type="submit"]');
+            assignGroupsToRoleBtn.click();
+        
+            checkNotification("Role assigned for Group(s) successfully!" );
+        });
+
         it('should close the modal when the close button is clicked', () => {
             const closeAssignGroupBtn = document.querySelector('#closeAssignGroupsModal');
 
@@ -1340,4 +1475,141 @@ describe('Role Page', () => {
         
     });
 
+    
+
+
+describe('handleSearch', () => {
+    let rolesTableBody;
+    
+    beforeEach(() => {
+        
+        const roles = [
+            { id: 1, name: 'Admin', description: 'Administrator role' },
+            { id: 2, name: 'User', description: 'Regular user role' }
+        ];
+        localStorage.setItem('roles', JSON.stringify(roles));
+        
+        ({handleSearch} = require('../script.js'));
+
+        
+        rolesTableBody = document.querySelector('#rolesTable tbody');
+    });
+
+    it('should display filtered roles based on search input', () => {
+        const searchInput = document.querySelector('#searchRole');
+        
+    
+        searchInput.value = 'Admin';
+        searchInput.dispatchEvent(new Event('input'));
+        
+        expect(rolesTableBody.innerHTML).toContain('Admin');
+        expect(rolesTableBody.innerHTML).not.toContain('User');
+    });
+
+    it('should display "No search results found" if no roles match the search query', () => {
+        const searchInput = document.querySelector('#searchInput');
+        
+        
+        // Simulate user input
+        searchInput.value = 'Nonexistent';
+        searchInput.dispatchEvent(new Event('input'));
+        
+        expect(rolesTableBody.innerHTML).toContain('No search results found');
+    });
+});
+
+describe('handleRoleAssignmentsSearch', () => {
+    let assignmentsTableBody;
+    
+    beforeEach(() => {
+        // Mock localStorage
+        const roles = [
+            { id: 1, name: 'Admin', assignedUsers: ['user1'], assignedGroups: ['group1'] },
+            { id: 2, name: 'User', assignedUsers: [], assignedGroups: [] }
+        ];
+        localStorage.setItem('roles', JSON.stringify(roles));
+        
+        // Set up HTML structure
+        document.body.innerHTML = `
+            <table id="roleAssignmentsTable">
+                <tbody></tbody>
+            </table>
+            <input type="text" id="assignmentsSearchInput">
+        `;
+        
+        assignmentsTableBody = document.querySelector('#roleAssignmentsTable tbody');
+    });
+
+    it('should display filtered role assignments based on search input', () => {
+        const searchInput = document.querySelector('#assignmentsSearchInput');
+        searchInput.addEventListener('input', handleRoleAssignmentsSearch);
+        
+        // Simulate user input
+        searchInput.value = 'Admin';
+        searchInput.dispatchEvent(new Event('input'));
+        
+        expect(assignmentsTableBody.innerHTML).toContain('Admin');
+        expect(assignmentsTableBody.innerHTML).not.toContain('User');
+    });
+
+    it('should display "No search results found" if no role assignments match the search query', () => {
+        const searchInput = document.querySelector('#assignmentsSearchInput');
+        searchInput.addEventListener('input', handleRoleAssignmentsSearch);
+        
+        // Simulate user input
+        searchInput.value = 'Nonexistent';
+        searchInput.dispatchEvent(new Event('input'));
+        
+        expect(assignmentsTableBody.innerHTML).toContain('No search results found');
+    });
+});
+
+
+});
+
+describe('showNotification', () => {
+    let notification;
+
+    beforeEach(() => {
+
+        const html = fs.readFileSync(path.resolve(__dirname, '../index.html'), 'utf8');
+        document.body.innerHTML = html;
+        ({showNotification} = require('../script.js'));
+
+        jest.resetModules();
+        notification = document.getElementById('notification');
+        notification.style.display = 'none';
+        notification.style.opacity = '1';
+        jest.useFakeTimers();
+    });
+
+    test('should display the notification with the correct message', () => {
+        showNotification('Test message');
+        expect(notification.textContent).toBe('Test message');
+        expect(notification.style.display).toBe('block');
+    });
+
+    test('should hide the notification after 3.5 seconds', () => {
+        showNotification('Test message');
+        jest.advanceTimersByTime(3500); 
+        expect(notification.style.display).toBe('none');
+    });
+
+    test('should fade out the notification before hiding', () => {
+        showNotification('Test message');
+        jest.advanceTimersByTime(3000); 
+        expect(notification.style.opacity).toBe('0');
+        
+        jest.advanceTimersByTime(500);
+        expect(notification.style.opacity).toBe('1');
+    });
+
+    test('should reset styles after hiding', () => {
+        showNotification('Test message');
+        jest.advanceTimersByTime(3000);
+        jest.advanceTimersByTime(500); 
+
+        expect(notification.style.display).toBe('none');
+        expect(notification.style.opacity).toBe('1');
+    });
 });

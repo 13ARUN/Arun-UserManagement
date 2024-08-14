@@ -10,6 +10,9 @@
 </head>
 <body>
     <!--* Side Bar *-->
+
+    <div id="notification" class="notification"></div>
+
     <nav class="sidebar">
         <div class="logo_content">
             <div class="logo">
@@ -97,13 +100,13 @@
             <form id="updateUserForm" autocomplete="off">
                 <h3>Update User</h3>
                 <label for="updateUsername">Username:</label>
-                <input type="text" id="updateUsername" required><br>
+                <input type="text" id="updateUsername" required>
                 <label for="updateEmail">Email:</label>
-                <input type="email" id="updateEmail" required><br>
+                <input type="email" id="updateEmail" required>
                 <label for="updateFirstName">First Name:</label>
-                <input type="text" id="updateFirstName" required><br>
+                <input type="text" id="updateFirstName" required>
                 <label for="updateLastName">Last Name:</label>
-                <input type="text" id="updateLastName" required><br>
+                <input type="text" id="updateLastName" required>
                 <div class="updateUserModalBtns">
                     <button id="submitUpdateUserModal" type="submit">Update User</button>
                     <button id="cancelEdit" type="button">Cancel</button>
@@ -249,7 +252,7 @@
             <h2 id="roleAssignments">Role Assignments</h2>
             <div class="view">
                 <div class="search">
-                    <input id="searchRole" type="search" placeholder="Search for roles..">
+                    <input id="searchRoleAssignments" type="search" placeholder="Search for roles..">
                 </div>
                 <div class="viewRoles">
                     <button id="viewRoles"><i class="fa-solid fa-eye"></i> View Roles</button>
@@ -273,9 +276,11 @@
         
     </div>
 
+
     <script src="script.js"></script>
     
 </body>
 </html>
+
 
 
