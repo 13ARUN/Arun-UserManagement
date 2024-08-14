@@ -49,9 +49,7 @@
 
         <!-- Add User Form -->
          <div class="addUserModal" style="display: none;">
-            <form id="addUserForm"  autocomplete="off">
-                
-                
+            <form id="addUserForm" autocomplete="off">
                 <button id="closeAddUserModal" type="button">Close</button>
                 <h3>Add User</h3>
                 <label for="userName">Username:</label>
@@ -96,7 +94,7 @@
 
         <!-- Update User Form -->
          <div class="updateUserModal" style="display:none;">
-            <form id="updateUserForm" >
+            <form id="updateUserForm" autocomplete="off">
                 <h3>Update User</h3>
                 <label for="updateUsername">Username:</label>
                 <input type="text" id="updateUsername" required><br>
@@ -107,7 +105,7 @@
                 <label for="updateLastName">Last Name:</label>
                 <input type="text" id="updateLastName" required><br>
                 <div class="updateUserModalBtns">
-                    <button type="submit">Update User</button>
+                    <button id="submitUpdateUserModal" type="submit">Update User</button>
                     <button id="cancelEdit" type="button">Cancel</button>
                 </div>
             </form>
@@ -121,7 +119,7 @@
 
         <!-- Create Group Form -->
          <div class="createGroupModal" style="display: none;">
-            <form id="createGroupForm">
+            <form id="createGroupForm" autocomplete="off">
                 <button id="closeCreateGroupModal" type="button">Close</button>
                 <h3>Create Group</h3>
                 <label for="groupName">Group Name:</label>
@@ -154,7 +152,7 @@
 
         <!-- Add Users to Group Form -->
         <div class="addUserToGroupModal" style="display: none;">
-            <form id="addUsersToGroupForm">
+            <form id="addUsersToGroupForm" autocomplete="off">
                 <button id="closeAddUser" type="button">Close</button>
                 <h3>Add Users to Group</h3>
                 <label for="usersSelect">Select Users:</label>
@@ -164,7 +162,7 @@
         </div>
 
         <div class="removeUserFromGroup" style="display: none;">
-            <form id="removeUserFromGroup" >
+            <form id="removeUserFromGroup" autocomplete="off">
                 <button id="closeRemoveUser" type="button">Close</button>
                 <h3>Remove Users from Group</h3>
                 <label for="usersSelectRemove">Select Users:</label>
@@ -182,7 +180,7 @@
 
         <!-- Create Role Form -->
          <div class="createRoleModal" style="display: none;">
-            <form id="createRoleForm" >
+            <form id="createRoleForm" autocomplete="off">
                 <button id="closeCreateRoleModal" type="button">Close</button>
                 <h3>Create Role</h3>
                 <label for="roleName">Role Name:</label>
@@ -195,7 +193,7 @@
 
         <!-- Roles List -->
         
-        <div class="topic">
+        <div class="topic" id="roleListdiv">
             <h2 id="roleList">Roles List</h2>
             <div class="createbtn">
                 <div class="search">
@@ -207,7 +205,7 @@
             </div>
         </div>
         
-        <div class="tableroles">
+        <div class="tableroles" id="rolesTablediv">
             <table id="rolesTable">
                 <thead>
                     <tr>
@@ -223,7 +221,7 @@
 
         <!-- Assign Roles to User Form -->
         <div class="assignRoleToUserModal" style="display: none;">
-            <form id="assignRolesToUserForm">
+            <form id="assignRolesToUserForm" autocomplete="off">
                 <button id="closeAssignUsersModal" type="button">Close</button>
                 <h3>Assign Users</h3>
                 <label for="usersSelectRole">Select Users:</label>
@@ -234,7 +232,7 @@
 
         <!-- Assign Roles to Group Form -->
         <div class="assignRoleToGroupModal" style="display: none;">
-            <form id="assignRolesToGroupForm" >
+            <form id="assignRolesToGroupForm" autocomplete="off">
                 <button id="closeAssignGroupsModal" type="button">Close</button>
                 <h3>Assign Groups</h3>
 
@@ -247,11 +245,10 @@
 
         <!-- View Role Assignments -->
         
-        <div class="topic">
+        <div class="topic" id="roleAssignmentsdiv">
             <h2 id="roleAssignments">Role Assignments</h2>
             <div class="view">
                 <div class="search">
-                    
                     <input id="searchRole" type="search" placeholder="Search for roles..">
                 </div>
                 <div class="viewRoles">

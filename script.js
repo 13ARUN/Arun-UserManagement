@@ -1,6 +1,4 @@
 
-
-
 // const searchInput = document.getElementById('searchRole');
 // searchInput.addEventListener('input', handleSearch);
 
