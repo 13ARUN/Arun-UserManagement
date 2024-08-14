@@ -372,29 +372,17 @@ const submitCreateRoleModalBtn = document.querySelector('#submitCreateRoleModal'
 const roleNameInput = document.querySelector('#roleName');
 const roleDescriptionInput = document.querySelector('#roleDescription');
 
-const assignRoleToUserModal = document.querySelector('.assignRoleToUserModal');
-const userSelectForRole = document.querySelector('#userSelectForRole');
-const roleSelectForUser = document.querySelector('#roleSelectForUser');
-const assignRoleToUserForm = document.querySelector('#assignRoleToUserForm');
-const assignRoleSubmitBtn = document.querySelector('#assignRoleSubmitBtn');
-const closeAssignRoleBtn = document.querySelector('#closeAssignRoleBtn');
 
-const assignRoleToGroupModal = document.querySelector('.assignRoleToGroupModal');
-const groupSelectForRole = document.querySelector('#groupSelectForRole');
-const roleSelectForGroup = document.querySelector('#roleSelectForGroup');
-const assignRoleToGroupForm = document.querySelector('#assignRoleToGroupForm');
-const assignRoleGroupSubmitBtn = document.querySelector('#assignRoleGroupSubmitBtn');
-const closeAssignRoleGroupBtn = document.querySelector('#closeAssignRoleGroupBtn');
 
 // Event Listeners
 createRoleBtn.addEventListener('click', () => showModal(createRoleModal));
 closeCreateRoleModalBtn.addEventListener('click', () => hideModal(createRoleModal));
 submitCreateRoleModalBtn.addEventListener('click', createRole);
 
-//closeAssignRoleBtn.addEventListener('click', () => hideModal(assignRoleToUserModal));
+closeAssignRoleBtn.addEventListener('click', () => hideModal(assignRoleToUserModal));
 //assignRoleSubmitBtn.addEventListener('click', assignRoleToUser);
 
-//closeAssignRoleGroupBtn.addEventListener('click', () => hideModal(assignRoleToGroupModal));
+closeAssignRoleGroupBtn.addEventListener('click', () => hideModal(assignRoleToGroupModal));
 //assignRoleGroupSubmitBtn.addEventListener('click', assignRoleToGroup);
 
 
@@ -424,6 +412,13 @@ function createRole() {
     hideModal(createRoleModal);
 }
 
+
+
+// const noResultsMessage = document.querySelector('#noResultsMessage');
+// if (noResultsMessage) {
+//     noResultsMessage.remove();
+// }
+
 function renderRoles() {
     const rolesTableBody = document.querySelector('#rolesTable tbody');
     const roles = localStorage.getItem('roles') ? JSON.parse(localStorage.getItem('roles')) : [];
@@ -442,103 +437,63 @@ function renderRoles() {
                 <td class="roleId-${role.id}">${formattedRoleId}</td>
                 <td class="roleName-${role.id}">${role.name}</td>
                 <td class="roleDescription-${role.id}">${role.description}</td>
-                <td class="actions" id="roleActions-${user.id}">
-                    <button title="assignUser" class="assignUser"><i class="fa-solid fa-user"></i> Assign User</button>
-                    <button title="assignGroup" class="assignGroup"><i class="fa-solid fa-user-group"></i> Assign Group</button>
+                <td class="actions" id="roleActions-${role.id}">
+                    <button title="assignUser" class="assignUser"><i class="fa-solid fa-user"></i> Assign Users</button>
+                    <button title="assignGroup" class="assignGroup"><i class="fa-solid fa-user-group"></i> Assign Groups</button>
                 </td>
             `;
 
             rolesTableBody.appendChild(row);
-        });
-    }
 
-    const noResultsMessage = document.querySelector('#noResultsMessage');
-    if (noResultsMessage) {
-        noResultsMessage.remove();
+            const assignUserBtn = row.querySelector('.assignUser');
+            const assignGroupBtn = row.querySelector('.assignGroup');
+
+            assignUserBtn.addEventListener('click', () => assignRoleToUser(role.id));
+            assignGroupBtn.addEventListener('click', () => assignRoleToGroup(role.id));
+        });
     }
 }
 
 
-function handleSearch(event) {
-    const searchValue = event.target.value.toLowerCase();
-    const roles = JSON.parse(localStorage.getItem('roles')) || [];
-    const filteredRoles = roles.filter(role => role.name.toLowerCase().includes(searchValue));
-    const rolesTableBody = document.querySelector('#rolesTable tbody');
-    
-    // Clear existing rows
-    rolesTableBody.innerHTML = '';
-    
-    if (filteredRoles.length === 0) {
-        // Display "No search results found" message
-        const noResultsMessage = document.createElement('tr');
-        noResultsMessage.id = 'noResultsMessage';
-        noResultsMessage.innerHTML = '<td colspan="3">No search results found</td>';
-        rolesTableBody.appendChild(noResultsMessage);
-    } else {
-        filteredRoles.forEach(role => {
-            const row = document.createElement('tr');
-            const formattedRoleId = `RL${String(role.id).padStart(3, '0')}`;
-            row.innerHTML = `
-                <td class="roleId-${role.id}">${formattedRoleId}</td>
-                <td class="roleName-${role.id}">${role.name}</td>
-                <td class="roleDescription-${role.id}">${role.description}</td>
-                <td class="actions" id="roleActions-${user.id}">
-                    <button title="assignUser" class="assignUser"><i class="fa-solid fa-user"></i> Assign User</button>
-                    <button title="assignGroup" class="assignGroup"><i class="fa-solid fa-user-group"></i> Assign Group</button>
-                </td>
-            `;
-            rolesTableBody.appendChild(row);
-        });
-    }
-
-}
-
-
-
-
-
-// function assignRoleToUser() {
-//     const roleId = roleSelectForUser.value;
-//     const userId = userSelectForRole.value;
-
-//     if (!roleId || !userId) return;
-
+// function handleSearch(event) {
+//     const searchValue = event.target.value.toLowerCase();
 //     const roles = JSON.parse(localStorage.getItem('roles')) || [];
-//     const users = JSON.parse(localStorage.getItem('users')) || [];
-
-//     const role = roles.find(r => r.id == roleId);
-//     const user = users.find(u => u.id == userId);
-
-//     if (role && user) {
-//         user.role = role.name;
-//         localStorage.setItem('users', JSON.stringify(users));
-//         renderRoles();
-//         hideModal(assignRoleToUserModal);
+//     const filteredRoles = roles.filter(role => role.name.toLowerCase().includes(searchValue));
+//     const rolesTableBody = document.querySelector('#rolesTable tbody');
+    
+//     // Clear existing rows
+//     rolesTableBody.innerHTML = '';
+    
+//     if (filteredRoles.length === 0) {
+//         // Display "No search results found" message
+//         const noResultsMessage = document.createElement('tr');
+//         noResultsMessage.id = 'noResultsMessage';
+//         noResultsMessage.innerHTML = '<td colspan="3">No search results found</td>';
+//         rolesTableBody.appendChild(noResultsMessage);
+//     } else {
+//         filteredRoles.forEach(role => {
+//             const row = document.createElement('tr');
+//             const formattedRoleId = `RL${String(role.id).padStart(3, '0')}`;
+//             row.innerHTML = `
+//                 <td class="roleId-${role.id}">${formattedRoleId}</td>
+//                 <td class="roleName-${role.id}">${role.name}</td>
+//                 <td class="roleDescription-${role.id}">${role.description}</td>
+//                 <td class="actions" id="roleActions-${user.id}">
+//                     <button title="assignUser" class="assignUser"><i class="fa-solid fa-user"></i> Assign User</button>
+//                     <button title="assignGroup" class="assignGroup"><i class="fa-solid fa-user-group"></i> Assign Group</button>
+//                 </td>
+//             `;
+//             rolesTableBody.appendChild(row);
+//         });
 //     }
+
 // }
 
-// function assignRoleToGroup() {
-//     const roleId = roleSelectForGroup.value;
-//     const groupId = groupSelectForRole.value;
 
-//     if (!roleId || !groupId) return;
 
-//     const roles = JSON.parse(localStorage.getItem('roles')) || [];
-//     const groups = JSON.parse(localStorage.getItem('groups')) || [];
 
-//     const role = roles.find(r => r.id == roleId);
-//     const group = groups.find(g => g.id == groupId);
 
-//     if (role && group) {
-//         group.roles = group.roles || [];
-//         if (!group.roles.includes(role.name)) {
-//             group.roles.push(role.name);
-//             localStorage.setItem('groups', JSON.stringify(groups));
-//             renderRoles();
-//         }
-//         hideModal(assignRoleToGroupModal);
-//     }
-// }
+
 
 
 

@@ -198,11 +198,11 @@ describe('HTML', () => {
 
             it('Topic', () => {
 
-                checkContains('.topic',['#userList','.addBtn']);
+                checkContains('.topic',['#userList','.createBtn2']);
                 checkTextContent('#userList', "Users List");
-                checkContains('.addBtn',['#addUser','.addBtn i']);
-                checkElement('.addBtn i',{class:'fa-solid fa-user-plus'})
-                checkTextContent('.addBtn button'," Create User")
+                checkContains('.createBtn2',['#addUser','.createBtn2 i']);
+                checkElement('.createBtn2 i',{class:'fa-solid fa-user-plus'})
+                checkTextContent('.createBtn2 button'," Create User")
 
             });
 

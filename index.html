@@ -200,7 +200,6 @@
             <div class="createbtn">
                 <div class="search">
                     <input id="searchRole" type="search" placeholder="Search for roles..">
-                    <i class="fa-solid fa-magnifying-glass"></i>
                 </div>
                 <div class="createRoleBtn">
                     <button id="createRole"><i class="fa-solid fa-user-plus"></i> Create Role</button>
@@ -224,7 +223,8 @@
 
         <!-- Assign Roles to User Form -->
         <div class="assignRoleToUserModal" style="display: none;">
-            <form id="assignRolesToUserForm" >
+            <form id="assignRolesToUserForm">
+                <button id="closeAssignUsersModal" type="button">Close</button>
                 <h3>Assign Roles to User</h3>
                 <label for="roleSelect">Select Role:</label>
                 <select id="roleSelect" required></select>
@@ -237,6 +237,7 @@
         <!-- Assign Roles to Group Form -->
         <div class="assignRoleToGroupModal" style="display: none;">
             <form id="assignRolesToGroupForm" >
+                <button id="closeAssignGroupsModal" type="button">Close</button>
                 <h3>Assign Roles to Group</h3>
                 <label for="groupRoleSelect">Select Role:</label>
                 <select id="groupRoleSelect" required></select><br>
@@ -255,18 +256,12 @@
                 <div class="search">
                     
                     <input id="searchRole" type="search" placeholder="Search for roles..">
-                    <i class="fa-solid fa-magnifying-glass"></i>
                 </div>
                 <div class="viewRoles">
                     <button id="viewRoles"><i class="fa-solid fa-eye"></i> View Roles</button>
                 </div>
             </div>
-            <!-- <div class="assignUsers">
-                <button id="assignRole"><i class="fa-solid fa-user"></i> Users</button>
-            </div>
-            <div class="assignGroup">
-                <button id="assigngroup"><i class="fa-solid fa-user-group"></i> Groups</button>
-            </div> -->
+
         </div>
         
         <div class="tableroleassignments">

@@ -439,13 +439,13 @@ describe('User Page', () => {
             const user = document.querySelector('#UserRow-1');
             expect(user).toBeTruthy();
 
-            expect((document.querySelector('.userId-1')).textContent).toBe('U001');
+            expect((document.querySelector('.userId-1')).textContent).toBe('US001');
             expect((document.querySelector('.userName-1')).textContent).toBe('User1');
             expect((document.querySelector('.userEmail-1')).textContent).toBe('user1@example.com');
             expect((document.querySelector('.userFname-1')).textContent).toBe('John');
             expect((document.querySelector('.userLname-1')).textContent).toBe('Doe');
 
-            expect((document.querySelector('.userId-2')).textContent).toBe('U002');
+            expect((document.querySelector('.userId-2')).textContent).toBe('US002');
             expect((document.querySelector('.userName-2')).textContent).toBe('User2');
             expect((document.querySelector('.userEmail-2')).textContent).toBe('user2@example.com');
             expect((document.querySelector('.userFname-2')).textContent).toBe('Jane');
@@ -464,8 +464,8 @@ describe('User Page', () => {
             renderUsers();
         
             const usersTableBody = document.querySelector('#usersTable tbody');
-            expect(usersTableBody.querySelector('.userId-1').textContent).toBe('U001');
-            expect(usersTableBody.querySelector('.userId-10').textContent).toBe('U010');
+            expect(usersTableBody.querySelector('.userId-1').textContent).toBe('US001');
+            expect(usersTableBody.querySelector('.userId-10').textContent).toBe('US010');
         });
         
 
@@ -532,7 +532,7 @@ describe('User Page', () => {
 
         it('should work with delete button event listener', () => {
 
-            let deleteBtn1 = document.querySelector('.userActions-1 button[title="delete"]');
+            let deleteBtn1 = document.querySelector('#userActions-1 button[title="delete"]');
 
             deleteBtn1.click();
     
@@ -624,7 +624,7 @@ describe('User Page', () => {
             expect(updateUserModal).toBeTruthy();
             expect(updateUserModal.style.display).toBe('none');
 
-            let editBtn1 = document.querySelector('.userActions-1 button[title="edit"]');
+            let editBtn1 = document.querySelector('#userActions-1 button[title="edit"]');
 
             editBtn1.click();
 
@@ -1216,4 +1216,15 @@ describe('Role Page', () => {
     //         expect(tableRows[1].textContent).toContain('Role 2');
     //     });
     // });
+
+    describe('Assign users to Role', () => {
+
+        
+    });
+
+    describe('Assign groups to Role', () => {
+
+        
+    });
+
 });
