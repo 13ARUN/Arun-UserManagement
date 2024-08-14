@@ -389,10 +389,10 @@ describe('HTML', () => {
             });
         
             checkElement('#assignRolesToUserForm button',{
-                type: 'submit',
+                type: 'button',
             });
             checkDisabledState('#assignRolesToUserForm button', false);            
-            checkTextContent('#assignRolesToUserForm button', "Assign Roles to Users");
+            checkTextContent('#assignRolesToUserForm button', "Close");
 
 
         });
@@ -411,10 +411,10 @@ describe('HTML', () => {
             });
         
             checkElement('#assignRolesToGroupForm button',{
-                type: 'submit',
+                type: 'button',
             });
             checkDisabledState('#assignRolesToGroupForm button', false);            
-            checkTextContent('#assignRolesToGroupForm button', "Assign Roles to Groups");
+            checkTextContent('#assignRolesToGroupForm button', "Close");
 
 
         });

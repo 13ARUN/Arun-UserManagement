@@ -13,8 +13,8 @@ document.addEventListener('DOMContentLoaded', () => {
     renderRoles();
     
     // Attach search event listener
-    const searchInput = document.getElementById('searchRole');
-    searchInput.addEventListener('input', handleSearch);
+    // const searchInput = document.getElementById('searchRole');
+    // searchInput.addEventListener('input', handleSearch);
     
 
 });
@@ -379,10 +379,10 @@ createRoleBtn.addEventListener('click', () => showModal(createRoleModal));
 closeCreateRoleModalBtn.addEventListener('click', () => hideModal(createRoleModal));
 submitCreateRoleModalBtn.addEventListener('click', createRole);
 
-closeAssignRoleBtn.addEventListener('click', () => hideModal(assignRoleToUserModal));
+//closeAssignRoleBtn.addEventListener('click', () => hideModal(assignRoleToUserModal));
 //assignRoleSubmitBtn.addEventListener('click', assignRoleToUser);
 
-closeAssignRoleGroupBtn.addEventListener('click', () => hideModal(assignRoleToGroupModal));
+//closeAssignRoleGroupBtn.addEventListener('click', () => hideModal(assignRoleToGroupModal));
 //assignRoleGroupSubmitBtn.addEventListener('click', assignRoleToGroup);
 
 
