@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', renderGroups);
 document.addEventListener('DOMContentLoaded', () => {
     // Restore roles when DOM is loaded
     renderRoles();
+    renderRoleAssignments();
     
     // Attach search event listener
     // const searchInput = document.getElementById('searchRole');
@@ -294,14 +295,82 @@ function renderGroups() {
     }
 }
 
+// function addUser(groupId) {
+//     showModal(addUserToGroupModal);
+
+//     const groups = JSON.parse(localStorage.getItem('groups'));
+//     const group = groups.find(g => g.id === groupId);
+//     addUserSubmitBtn.innerHTML = `Add users to ${group.groupName}`;
+
+//     const users = localStorage.getItem('users') ? JSON.parse(localStorage.getItem('users')) : [];
+//     if (users.length === 0) {
+//         usersSelect.innerHTML = '<option>No users to add</option>';
+//         addUserSubmitBtn.disabled = true; // Disable the submit button if no users
+//     } else {
+//         usersSelect.innerHTML = users.map(user => `<option value="${user.id}">${user.userName}</option>`).join('');
+//         addUserSubmitBtn.disabled = false; // Enable the submit button if users are available
+//     }
+
+//     addUsersToGroupForm.onsubmit = (event) => {
+//         event.preventDefault();
+
+//         const selectedUserNames = Array.from(usersSelect.selectedOptions).map(option => option.textContent);
+//         const updatedGroups = groups.map(g => {
+//             if (g.id === groupId) {
+//                 selectedUserNames.forEach(userName => {
+//                     if (!g.users.includes(userName)) g.users.push(userName);
+//                 });
+//             }
+//             return g;
+//         });
+
+//         localStorage.setItem('groups', JSON.stringify(updatedGroups));
+//         renderGroups();
+//         hideModal(addUserToGroupModal);
+//     };
+// }
+
+// function removeUser(groupId) {
+//     showModal(removeUserFromGroupModal);
+
+//     const groups = JSON.parse(localStorage.getItem('groups'));
+//     const group = groups.find(g => g.id === groupId);
+
+//     removeUserSubmitBtn.innerHTML = `Remove users from ${group.groupName}`;
+    
+//     if (group.users.length === 0) {
+//         userSelect.innerHTML = '<option>No users to remove</option>';
+//         removeUserSubmitBtn.disabled = true; // Disable the submit button if no users to remove
+//     } else {
+//         userSelect.innerHTML = group.users.map(user => `<option>${user}</option>`).join('');
+//         removeUserSubmitBtn.disabled = false; // Enable the submit button if users are available
+//     }
+//     removeUsersFromGroupForm.onsubmit = (event) => {
+//         event.preventDefault();
+
+//         const selectedUsers = Array.from(userSelect.selectedOptions).map(option => option.textContent);
+//         const updatedGroups = groups.map(g => {
+//             if (g.id === groupId) {
+//                 g.users = g.users.filter(user => !selectedUsers.includes(user));
+//             }
+//             return g;
+//         });
+
+//         localStorage.setItem('groups', JSON.stringify(updatedGroups));
+//         renderGroups();
+//         hideModal(removeUserFromGroupModal);
+//     };
+    
+// }
+
 function addUser(groupId) {
     showModal(addUserToGroupModal);
 
-    const groups = JSON.parse(localStorage.getItem('groups'));
+    const groups = JSON.parse(localStorage.getItem('groups')) || [];
     const group = groups.find(g => g.id === groupId);
     addUserSubmitBtn.innerHTML = `Add users to ${group.groupName}`;
 
-    const users = localStorage.getItem('users') ? JSON.parse(localStorage.getItem('users')) : [];
+    const users = JSON.parse(localStorage.getItem('users')) || [];
     if (users.length === 0) {
         usersSelect.innerHTML = '<option>No users to add</option>';
         addUserSubmitBtn.disabled = true; // Disable the submit button if no users
@@ -314,14 +383,15 @@ function addUser(groupId) {
         event.preventDefault();
 
         const selectedUserNames = Array.from(usersSelect.selectedOptions).map(option => option.textContent);
-        const updatedGroups = groups.map(g => {
-            if (g.id === groupId) {
-                selectedUserNames.forEach(userName => {
-                    if (!g.users.includes(userName)) g.users.push(userName);
-                });
-            }
-            return g;
+        const userSet = new Set(group.users);
+
+        selectedUserNames.forEach(userName => {
+            userSet.add(userName);
         });
+
+        group.users = Array.from(userSet); 
+
+        const updatedGroups = groups.map(g => g.id === groupId ? group : g);
 
         localStorage.setItem('groups', JSON.stringify(updatedGroups));
         renderGroups();
@@ -332,7 +402,7 @@ function addUser(groupId) {
 function removeUser(groupId) {
     showModal(removeUserFromGroupModal);
 
-    const groups = JSON.parse(localStorage.getItem('groups'));
+    const groups = JSON.parse(localStorage.getItem('groups')) || [];
     const group = groups.find(g => g.id === groupId);
 
     removeUserSubmitBtn.innerHTML = `Remove users from ${group.groupName}`;
@@ -344,23 +414,30 @@ function removeUser(groupId) {
         userSelect.innerHTML = group.users.map(user => `<option>${user}</option>`).join('');
         removeUserSubmitBtn.disabled = false; // Enable the submit button if users are available
     }
+
     removeUsersFromGroupForm.onsubmit = (event) => {
         event.preventDefault();
 
         const selectedUsers = Array.from(userSelect.selectedOptions).map(option => option.textContent);
-        const updatedGroups = groups.map(g => {
-            if (g.id === groupId) {
-                g.users = g.users.filter(user => !selectedUsers.includes(user));
-            }
-            return g;
+
+        // Convert the existing users list to a Set to facilitate removal
+        const userSet = new Set(group.users);
+
+        selectedUsers.forEach(user => {
+            userSet.delete(user);
         });
+
+        group.users = Array.from(userSet); // Convert Set back to array
+
+        const updatedGroups = groups.map(g => g.id === groupId ? group : g);
 
         localStorage.setItem('groups', JSON.stringify(updatedGroups));
         renderGroups();
         hideModal(removeUserFromGroupModal);
     };
-    
 }
+
+
 
 
 //* role js
@@ -372,22 +449,41 @@ const submitCreateRoleModalBtn = document.querySelector('#submitCreateRoleModal'
 const roleNameInput = document.querySelector('#roleName');
 const roleDescriptionInput = document.querySelector('#roleDescription');
 
+const closeAssignRoleBtn = document.querySelector('#closeAssignUsersModal');
+const closeAssignRoleGroupBtn = document.querySelector('#closeAssignGroupsModal');
+const assignRoleToUserModal = document.querySelector('.assignRoleToUserModal');
+const assignRoleToGroupModal = document.querySelector('.assignRoleToGroupModal');
 
 
-// Event Listeners
+
+// Form elements
+const addUsersToRoleForm = document.querySelector('#assignRolesToUserForm');
+const assignUserSubmitBtn = document.querySelector('#assignRolesToUserForm button[type="submit"]');
+
+
+const addGroupsToRoleForm = document.querySelector('#assignRolesToGroupForm');
+const assignGroupSubmitBtn = document.querySelector('#assignRolesToGroupForm button[type="submit"]');
+
+// Button elements
+
+
+
+// Select elements
+const usersSelectRole = document.querySelector('#usersSelectRole');
+const groupsSelect = document.querySelector('#groupsSelect');
+
+// Table body for role assignments
+
+
+
 createRoleBtn.addEventListener('click', () => showModal(createRoleModal));
 closeCreateRoleModalBtn.addEventListener('click', () => hideModal(createRoleModal));
 submitCreateRoleModalBtn.addEventListener('click', createRole);
 
-//closeAssignRoleBtn.addEventListener('click', () => hideModal(assignRoleToUserModal));
-//assignRoleSubmitBtn.addEventListener('click', assignRoleToUser);
+closeAssignRoleBtn.addEventListener('click', () => hideModal(assignRoleToUserModal));
 
-//closeAssignRoleGroupBtn.addEventListener('click', () => hideModal(assignRoleToGroupModal));
-//assignRoleGroupSubmitBtn.addEventListener('click', assignRoleToGroup);
+closeAssignRoleGroupBtn.addEventListener('click', () => hideModal(assignRoleToGroupModal));
 
-
-
-// Functions
 
 
 function generateRoleId() {
@@ -400,6 +496,8 @@ function createRole() {
         id: generateRoleId(),
         name: roleNameInput.value,
         description: roleDescriptionInput.value,
+        assignedUsers: [],
+        assignedGroups: [],
     };
 
     const roles = localStorage.getItem('roles') ? JSON.parse(localStorage.getItem('roles')) : [];
@@ -414,10 +512,7 @@ function createRole() {
 
 
 
-// const noResultsMessage = document.querySelector('#noResultsMessage');
-// if (noResultsMessage) {
-//     noResultsMessage.remove();
-// }
+
 
 function renderRoles() {
     const rolesTableBody = document.querySelector('#rolesTable tbody');
@@ -455,6 +550,125 @@ function renderRoles() {
 }
 
 
+
+function assignRoleToUser(roleId) {
+    showModal(assignRoleToUserModal);
+    
+    const roles = JSON.parse(localStorage.getItem('roles')) || [];
+    const role = roles.find(r => r.id === roleId);
+    
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+    usersSelectRole.innerHTML = users.map(user => `<option value="${user.id}">${user.userName}</option>`).join('');
+    assignUserSubmitBtn.disabled = users.length === 0;
+
+    addUsersToRoleForm.onsubmit = function (event) {
+        event.preventDefault();
+        
+        // Get existing assigned users from the role
+        const existingAssignedUsers = role.assignedUsers || [];
+        
+        // Get selected user IDs from the form
+        const selectedUserIds = Array.from(usersSelectRole.selectedOptions).map(option => option.textContent);
+        
+        // Merge new users with existing assigned users
+        role.assignedUsers = Array.from(new Set([...existingAssignedUsers, ...selectedUserIds]));
+        
+        localStorage.setItem('roles', JSON.stringify(roles));
+        renderRoleAssignments();
+        hideModal(assignRoleToUserModal);
+    };
+}
+
+
+
+
+
+// Function to assign roles to groups
+function assignRoleToGroup(roleId) {
+    showModal(assignRoleToGroupModal);
+    
+    const roles = JSON.parse(localStorage.getItem('roles')) || [];
+    const role = roles.find(r => r.id === roleId);
+    
+    const groups = JSON.parse(localStorage.getItem('groups')) || [];
+    groupsSelect.innerHTML = groups.map(group => `<option value="${group.id}">${group.groupName}</option>`).join('');
+    assignGroupSubmitBtn.disabled = groups.length === 0;
+
+    addGroupsToRoleForm.onsubmit = function (event) {
+        event.preventDefault();
+        
+        const existingAssignedGroups = role.assignedGroups || [];
+        
+        const selectedGroupIds = Array.from(groupsSelect.selectedOptions).map(option => option.textContent);
+        
+        role.assignedGroups = Array.from(new Set([...existingAssignedGroups, ...selectedGroupIds]));
+        
+        localStorage.setItem('roles', JSON.stringify(roles));
+        renderRoleAssignments();
+        hideModal(assignRoleToGroupModal);
+    };
+}
+
+
+// Function to render role assignments table
+function renderRoleAssignments() {
+    const roleAssignmentsTableBody = document.querySelector('#roleAssignmentsTable tbody');
+    const roles = JSON.parse(localStorage.getItem('roles')) || [];
+
+    // Filter roles to only include those with non-empty assignedUsers or assignedGroups
+    const filteredRoles = roles.filter(role => 
+        role.assignedUsers.length > 0 || role.assignedGroups.length > 0
+    );
+
+    roleAssignmentsTableBody.innerHTML = '';
+
+    if (filteredRoles.length === 0) {
+        roleAssignmentsTableBody.innerHTML = '<tr><td colspan="3" class="no-roles">No roles assigned</td></tr>';
+    } else {
+        filteredRoles.forEach(role => {
+            const assignedUsers = role.assignedUsers || [];
+            const assignedGroups = role.assignedGroups || [];
+            const usersContent = assignedUsers.length ? assignedUsers.join(', ') : 'No users assigned';
+            const groupsContent = assignedGroups.length ? assignedGroups.join(', ') : 'No groups assigned';
+
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="roleName-${role.id}">${role.name}</td>
+                <td class="assignedUsers-${role.id}">${usersContent}</td>
+                <td class="assignedGroups-${role.id}">${groupsContent}</td>
+            `;
+
+            roleAssignmentsTableBody.appendChild(row);
+        });
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+module.exports = {
+    renderUsers,
+    deleteUser,
+    editUser,
+    renderGroups,
+    renderRoles,
+    renderRoleAssignments
+};
+
+
 // function handleSearch(event) {
 //     const searchValue = event.target.value.toLowerCase();
 //     const roles = JSON.parse(localStorage.getItem('roles')) || [];
@@ -489,24 +703,10 @@ function renderRoles() {
 
 // }
 
-
-
-
-
-
-
-
-
-
-
-
-module.exports = {
-    renderUsers,
-    deleteUser,
-    editUser,
-    renderGroups,
-    renderRoles
-};
+// const noResultsMessage = document.querySelector('#noResultsMessage');
+// if (noResultsMessage) {
+//     noResultsMessage.remove();
+// }
 
 
 

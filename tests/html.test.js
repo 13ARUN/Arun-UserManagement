@@ -377,12 +377,9 @@ describe('HTML', () => {
 
         it('Assign Roles to Users', () => {
 
-            checkTextContent('#assignRolesToUserForm h3', "Assign Roles to User");
-            checkTextContent('label[for="roleSelect"]', "Select Role:");
+            checkTextContent('#assignRolesToUserForm h3', "Assign Users");
             checkTextContent('label[for="usersSelect"]', "Select Users:");
-            checkElement('#roleSelect',{
-                required: ''
-            });
+
             checkElement('#usersSelect',{
                 required: '',
                 multiple:''
@@ -399,12 +396,9 @@ describe('HTML', () => {
 
         it('Assign Roles to Groups', () => {
 
-            checkTextContent('#assignRolesToGroupForm h3', "Assign Roles to Group");
-            checkTextContent('label[for="groupRoleSelect"]', "Select Role:");
+            checkTextContent('#assignRolesToGroupForm h3', "Assign Groups");
             checkTextContent('label[for="groupsSelect"]', "Select Groups:");
-            checkElement('#groupRoleSelect',{
-                required: ''
-            });
+
             checkElement('#groupsSelect',{
                 required: '',
                 multiple:''

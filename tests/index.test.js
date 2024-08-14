@@ -1219,10 +1219,143 @@ describe('Role Page', () => {
 
     describe('Assign users to Role', () => {
 
+        beforeEach(() => {
+            ({renderRoleAssignments,renderRoles} = require('../script.js'));
+        });
+
+        it('should display "Assign User to Role" modal and populate users dropdown', () => {
+            setLocalStorageItem('roles', JSON.stringify([{ id: 1, name: "Role 1", description: "Description for Role 1", assignedUsers: [] ,assignedGroups: []}]));
+            setLocalStorageItem('users', JSON.stringify([{ id: 1, userName: "User 1" }, { id: 2, userName: "User 2" }]));
+
+            renderRoles();
+            
+            const assignUserBtn = document.querySelector('#roleActions-1 .assignUser');
+            assignUserBtn.click();
+
+            expect(document.querySelector('.assignRoleToUserModal').style.display).toBe('flex');
+
+
+            const userOptions = document.querySelectorAll('#usersSelectRole option');
+            expect(userOptions.length).toBe(2);
+            expect(userOptions[0].textContent).toBe('User 1');
+            expect(userOptions[1].textContent).toBe('User 2');
+        });
+
+        it('should add selected users to the role', () => {
+            setLocalStorageItem('roles', JSON.stringify([{ id: 1, name: "Role 1", description: "Description for Role 1", assignedUsers: [],assignedGroups: [] }]));
+            setLocalStorageItem('users', JSON.stringify([{ id: 1, userName: "User 1" }, { id: 2, userName: "User 2" }]));
+
+            renderRoles();
+            const assignUserBtn = document.querySelector('#roleActions-1 .assignUser');            assignUserBtn.click();
+
+            const userSelect = document.querySelector('#usersSelectRole');
+            userSelect.options[0].selected = true;
+            userSelect.options[1].selected = true;
+
+            const assignUsersToRoleBtn = document.querySelector('#assignRolesToUserForm button[type="submit"]');
+            assignUsersToRoleBtn.click();
+
+            const roles = getLocalStorageItem('roles');
+            expect(roles[0].assignedUsers).toEqual(['User 1', 'User 2']);
+        });
+
+        it('prevents assigning duplicate users to the same role', () => {
+            setLocalStorageItem('roles', JSON.stringify([{ id: 1, name: "Role 1", description: "Description for Role 1", assignedUsers: ['User 1'] }]));
+            setLocalStorageItem('users', JSON.stringify([{ id: 1, userName: "User 1" }, { id: 2, userName: "User 2" }]));
+
+            renderRoles();
+            const assignUserBtn = document.querySelector('#roleActions-1 .assignUser');          
+            assignUserBtn.click();
+
+            const userSelect = document.querySelector('#usersSelectRole');
+            userSelect.options[0].selected = true;
+            userSelect.options[1].selected = true;
+
+            const assignUsersToRoleBtn = document.querySelector('#assignRolesToUserForm button[type="submit"]');
+            assignUsersToRoleBtn.click();
+
+            const roles = getLocalStorageItem('roles');
+            expect(roles[0].assignedUsers).toEqual(['User 1', 'User 2']);
+        });
+
+        it('should close the modal when the close button is clicked', () => {
+            const closeAssignUserBtn = document.querySelector('#closeAssignUsersModal');
+
+            closeAssignUserBtn.click();
+            expect(document.querySelector('.assignRoleToUserModal').style.display).toBe('none');
+        });
+
+       
+
         
     });
 
     describe('Assign groups to Role', () => {
+
+        beforeEach(() => {
+            ({renderRoleAssignments,renderRoles} = require('../script.js'));
+        });
+
+        it('should display "Assign Group to Role" modal and populate groups dropdown', () => {
+            setLocalStorageItem('roles', JSON.stringify([{ id: 1, name: "Role 1", description: "Description for Role 1", assignedGroups: [] }]));
+            setLocalStorageItem('groups', JSON.stringify([{ id: 1, groupName: "Group 1" }, { id: 2, groupName: "Group 2" }]));
+
+            renderRoles();
+            const assignGroupBtn = document.querySelector('#roleActions-1 .assignGroup');
+            assignGroupBtn.click();
+
+            expect(document.querySelector('.assignRoleToGroupModal').style.display).toBe('flex');
+
+            const groupOptions = document.querySelectorAll('#groupsSelect option');
+            expect(groupOptions.length).toBe(2);
+            expect(groupOptions[0].textContent).toBe('Group 1');
+            expect(groupOptions[1].textContent).toBe('Group 2');
+        });
+
+        it('should add selected groups to the role', () => {
+            setLocalStorageItem('roles', JSON.stringify([{ id: 1, name: "Role 1", description: "Description for Role 1",assignedUsers: [] ,assignedGroups: [] }]));
+            setLocalStorageItem('groups', JSON.stringify([{ id: 1, groupName: "Group 1" }, { id: 2, groupName: "Group 2" }]));
+
+            renderRoles();
+            const assignGroupBtn = document.querySelector('#roleActions-1 .assignGroup');
+            assignGroupBtn.click();
+
+            const groupSelect = document.querySelector('#groupsSelect');
+            groupSelect.options[0].selected = true;
+            groupSelect.options[1].selected = true;
+
+            const assignGroupsToRoleBtn = document.querySelector('#assignRolesToGroupForm button[type="submit"]');
+            assignGroupsToRoleBtn.click();
+
+            const roles = getLocalStorageItem('roles');
+            expect(roles[0].assignedGroups).toEqual(['Group 1', 'Group 2']);
+        });
+
+        it('prevents assigning duplicate groups to the same role', () => {
+            setLocalStorageItem('roles', JSON.stringify([{ id: 1, name: "Role 1", description: "Description for Role 1", assignedUsers: [] ,assignedGroups: ['Group 1'] }]));
+            setLocalStorageItem('groups', JSON.stringify([{ id: 1, groupName: "Group 1" }, { id: 2, groupName: "Group 2" }]));
+
+            renderRoles();
+            const assignGroupBtn = document.querySelector('#roleActions-1 .assignGroup');
+            assignGroupBtn.click();
+
+            const groupSelect = document.querySelector('#groupsSelect');
+            groupSelect.options[0].selected = true;
+            groupSelect.options[1].selected = true;
+
+            const assignGroupsToRoleBtn = document.querySelector('#assignRolesToGroupForm button[type="submit"]');
+            assignGroupsToRoleBtn.click();
+
+            const roles = getLocalStorageItem('roles');
+            expect(roles[0].assignedGroups).toEqual(['Group 1', 'Group 2']);
+        });
+
+        it('should close the modal when the close button is clicked', () => {
+            const closeAssignGroupBtn = document.querySelector('#closeAssignGroupsModal');
+
+            closeAssignGroupBtn.click();
+            expect(document.querySelector('.assignRoleToGroupModal').style.display).toBe('none');
+        });
 
         
     });
