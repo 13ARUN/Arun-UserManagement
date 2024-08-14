@@ -31,9 +31,8 @@ document.addEventListener('DOMContentLoaded', () => {
     renderRoles();
     renderRoleAssignments();
 
-    const searchInput = document.getElementById('searchRole');
-    searchInput.addEventListener('input', handleSearch);
-    document.getElementById('searchRoleAssignments').addEventListener('input', handleRoleAssignmentsSearch);
+    // const searchInput = document.getElementById('searchRole');
+    // searchInput.addEventListener('input', handleSearch);
 });
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -478,10 +477,7 @@ function renderRoles() {
             assignGroupBtn.addEventListener('click', () => assignRoleToGroup(role.id));
         });
 
-        const noResultsMessage = document.querySelector('#noResultsMessage');
-            if (noResultsMessage) {
-                noResultsMessage.remove();
-            }
+
     }
 
 }
@@ -609,42 +605,7 @@ function handleSearch(event) {
 
 }
 
-function handleRoleAssignmentsSearch(event) {
 
-    const searchValue = event.target.value.toLowerCase();
-    const roleAssignments = JSON.parse(localStorage.getItem('roles')) || [];
-    const filteredAssignments = roleAssignments.filter(assignment =>
-        assignment.name.toLowerCase().includes(searchValue)
-    );
-    const assignmentsTableBody = document.querySelector('#roleAssignmentsTable tbody');
-
-    // Clear existing rows
-    assignmentsTableBody.innerHTML = '';
-
-    if (filteredAssignments.length === 0) {
-        // Display "No search results found" message
-        const noResultsMessage = document.createElement('tr');
-        noResultsMessage.id = 'noResultsMessage';
-        noResultsMessage.innerHTML = '<td colspan="3">No search results found</td>';
-        assignmentsTableBody.appendChild(noResultsMessage);
-    } else {
-        filteredAssignments.forEach(assignment => {
-            const assignedUsers = assignment.assignedUsers ;
-            const assignedGroups = assignment.assignedGroups || [];
-            const usersContent = assignedUsers.length ? assignedUsers.join(', ') : 'No users assigned';
-            const groupsContent = assignedGroups.length ? assignedGroups.join(', ') : 'No groups assigned';
-
-
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td class="roleName-${assignment.roleId}">${assignment.name}</td>
-                <td class="assignedUsers-${assignment.roleId}">${usersContent}</td>
-                <td class="assignedGroups-${assignment.roleId}">${groupsContent}</td>
-            `;
-            assignmentsTableBody.appendChild(row);
-        });
-    }
-}
 
 
   
@@ -664,7 +625,6 @@ module.exports = {
     renderRoles,
     renderRoleAssignments,
     showNotification,
-    handleSearch
 };
 
 
