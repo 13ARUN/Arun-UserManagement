@@ -84,9 +84,9 @@ describe('HTML', () => {
 
     describe('Title and Body', () => {
 
-        
 
         it('Head and Body', () => {
+            checkElement('head',{});
             checkElement('meta', {charset:"UTF-8"});
             checkElement('meta[name="viewport"]', {content:"width=device-width, initial-scale=1.0"});
             checkTextContent('title',"User Management System");
@@ -336,11 +336,11 @@ describe('HTML', () => {
 
         it('Create Role', () => {
 
-            //checkContains('.home_content', ['h2','#createRoleForm','h3','#rolesTable','#assignRolesToUserForm','#assignRolesToGroupForm','#roleAssignments']);
+            checkContains('#rolePage', ['#rolePage h1','.tableroles',,'.assignRoleToUserModal','.assignRoleToGroupModal','.tableroleassignments']);
 
             checkTextContent('#rolePage h1', "Role Management");
         
-            // checkContains('#createRoleForm', ['#createRoleForm h3','#createRoleForm label','input','button']);
+            checkContains('#createRoleForm', ['#createRoleForm h3','#createRoleForm label','#createRoleForm input','#createRoleForm button']);
 
             checkTextContent('#createRoleForm h3', "Create Role");
             checkTextContent('label[for="roleName"]', "Role Name:");

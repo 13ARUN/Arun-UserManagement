@@ -1,3 +1,10 @@
+
+
+
+// const searchInput = document.getElementById('searchRole');
+// searchInput.addEventListener('input', handleSearch);
+
+
 const sidebar = document.querySelector('.sidebar');
 const logo = document.querySelector('.logo_content');
 
@@ -5,19 +12,12 @@ logo.addEventListener('click', () => {
     sidebar.classList.toggle('active');
 });
 
-//document.addEventListener('DOMContentLoaded', renderRoles);
+
 document.addEventListener('DOMContentLoaded', renderUsers);
 document.addEventListener('DOMContentLoaded', renderGroups);
 document.addEventListener('DOMContentLoaded', () => {
-    // Restore roles when DOM is loaded
     renderRoles();
     renderRoleAssignments();
-    
-    // Attach search event listener
-    // const searchInput = document.getElementById('searchRole');
-    // searchInput.addEventListener('input', handleSearch);
-    
-
 });
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -72,18 +72,12 @@ const updateFirstNameInput = document.querySelector('#updateFirstName');
 const updateLastNameInput = document.querySelector('#updateLastName');
 const cancelEditBtn = document.querySelector('#cancelEdit');
 
-// Event Listeners
 createUserBtn.addEventListener('click', () => toggleModal(createUserModal, 'flex'));
 closeBtn.addEventListener('click', () => toggleModal(createUserModal, 'none'));
 submitBtn.addEventListener('click', AddUser);
 cancelEditBtn.addEventListener('click', () => toggleModal(updateUserModal, 'none'));
 
 
-
-
-
-
-// Functions
 function toggleModal(modal, displayStyle) {
     modal.style.display = displayStyle;
 }
@@ -98,7 +92,6 @@ function generateUserId() {
 }
 
 
-// User Handling Functions
 function AddUser() {
     const user = {
         id: generateUserId(),
@@ -203,7 +196,7 @@ function updateUser(userId) {
 
 //* group js
 
-// Constants for DOM elements
+
 const createGroupModal = document.querySelector('.createGroupModal');
 const createGroupBtn = document.querySelector('#createGroup');
 const closeCreateGroupModalBtn = document.querySelector('#closeCreateGroupModal');
@@ -229,8 +222,6 @@ closeAddUserBtn.addEventListener('click', () => hideModal(addUserToGroupModal));
 closeRemoveUserBtn.addEventListener('click', () => hideModal(removeUserFromGroupModal));
 
 
-
-
 function showModal(modal) {
     modal.style.display = 'flex';
 }
@@ -243,7 +234,6 @@ function generateGroupId() {
     const groups = localStorage.getItem('groups') ? JSON.parse(localStorage.getItem('groups')) : [];
     return groups.length ? groups[groups.length - 1].id + 1 : 1;
 }
-
 
 function CreateGroup() {
     const group = {
@@ -295,88 +285,20 @@ function renderGroups() {
     }
 }
 
-// function addUser(groupId) {
-//     showModal(addUserToGroupModal);
-
-//     const groups = JSON.parse(localStorage.getItem('groups'));
-//     const group = groups.find(g => g.id === groupId);
-//     addUserSubmitBtn.innerHTML = `Add users to ${group.groupName}`;
-
-//     const users = localStorage.getItem('users') ? JSON.parse(localStorage.getItem('users')) : [];
-//     if (users.length === 0) {
-//         usersSelect.innerHTML = '<option>No users to add</option>';
-//         addUserSubmitBtn.disabled = true; // Disable the submit button if no users
-//     } else {
-//         usersSelect.innerHTML = users.map(user => `<option value="${user.id}">${user.userName}</option>`).join('');
-//         addUserSubmitBtn.disabled = false; // Enable the submit button if users are available
-//     }
-
-//     addUsersToGroupForm.onsubmit = (event) => {
-//         event.preventDefault();
-
-//         const selectedUserNames = Array.from(usersSelect.selectedOptions).map(option => option.textContent);
-//         const updatedGroups = groups.map(g => {
-//             if (g.id === groupId) {
-//                 selectedUserNames.forEach(userName => {
-//                     if (!g.users.includes(userName)) g.users.push(userName);
-//                 });
-//             }
-//             return g;
-//         });
-
-//         localStorage.setItem('groups', JSON.stringify(updatedGroups));
-//         renderGroups();
-//         hideModal(addUserToGroupModal);
-//     };
-// }
-
-// function removeUser(groupId) {
-//     showModal(removeUserFromGroupModal);
-
-//     const groups = JSON.parse(localStorage.getItem('groups'));
-//     const group = groups.find(g => g.id === groupId);
-
-//     removeUserSubmitBtn.innerHTML = `Remove users from ${group.groupName}`;
-    
-//     if (group.users.length === 0) {
-//         userSelect.innerHTML = '<option>No users to remove</option>';
-//         removeUserSubmitBtn.disabled = true; // Disable the submit button if no users to remove
-//     } else {
-//         userSelect.innerHTML = group.users.map(user => `<option>${user}</option>`).join('');
-//         removeUserSubmitBtn.disabled = false; // Enable the submit button if users are available
-//     }
-//     removeUsersFromGroupForm.onsubmit = (event) => {
-//         event.preventDefault();
-
-//         const selectedUsers = Array.from(userSelect.selectedOptions).map(option => option.textContent);
-//         const updatedGroups = groups.map(g => {
-//             if (g.id === groupId) {
-//                 g.users = g.users.filter(user => !selectedUsers.includes(user));
-//             }
-//             return g;
-//         });
-
-//         localStorage.setItem('groups', JSON.stringify(updatedGroups));
-//         renderGroups();
-//         hideModal(removeUserFromGroupModal);
-//     };
-    
-// }
-
 function addUser(groupId) {
     showModal(addUserToGroupModal);
 
-    const groups = JSON.parse(localStorage.getItem('groups')) || [];
+    const groups = JSON.parse(localStorage.getItem('groups'));
     const group = groups.find(g => g.id === groupId);
     addUserSubmitBtn.innerHTML = `Add users to ${group.groupName}`;
 
     const users = JSON.parse(localStorage.getItem('users')) || [];
     if (users.length === 0) {
         usersSelect.innerHTML = '<option>No users to add</option>';
-        addUserSubmitBtn.disabled = true; // Disable the submit button if no users
+        addUserSubmitBtn.disabled = true; 
     } else {
         usersSelect.innerHTML = users.map(user => `<option value="${user.id}">${user.userName}</option>`).join('');
-        addUserSubmitBtn.disabled = false; // Enable the submit button if users are available
+        addUserSubmitBtn.disabled = false;
     }
 
     addUsersToGroupForm.onsubmit = (event) => {
@@ -402,17 +324,17 @@ function addUser(groupId) {
 function removeUser(groupId) {
     showModal(removeUserFromGroupModal);
 
-    const groups = JSON.parse(localStorage.getItem('groups')) || [];
+    const groups = JSON.parse(localStorage.getItem('groups'));
     const group = groups.find(g => g.id === groupId);
 
     removeUserSubmitBtn.innerHTML = `Remove users from ${group.groupName}`;
     
     if (group.users.length === 0) {
         userSelect.innerHTML = '<option>No users to remove</option>';
-        removeUserSubmitBtn.disabled = true; // Disable the submit button if no users to remove
+        removeUserSubmitBtn.disabled = true;
     } else {
         userSelect.innerHTML = group.users.map(user => `<option>${user}</option>`).join('');
-        removeUserSubmitBtn.disabled = false; // Enable the submit button if users are available
+        removeUserSubmitBtn.disabled = false;
     }
 
     removeUsersFromGroupForm.onsubmit = (event) => {
@@ -420,14 +342,14 @@ function removeUser(groupId) {
 
         const selectedUsers = Array.from(userSelect.selectedOptions).map(option => option.textContent);
 
-        // Convert the existing users list to a Set to facilitate removal
+    
         const userSet = new Set(group.users);
 
         selectedUsers.forEach(user => {
             userSet.delete(user);
         });
 
-        group.users = Array.from(userSet); // Convert Set back to array
+        group.users = Array.from(userSet); 
 
         const updatedGroups = groups.map(g => g.id === groupId ? group : g);
 
@@ -437,9 +359,6 @@ function removeUser(groupId) {
     };
 }
 
-
-
-
 //* role js
 
 const createRoleModal = document.querySelector('.createRoleModal');
@@ -448,40 +367,23 @@ const closeCreateRoleModalBtn = document.querySelector('#closeCreateRoleModal');
 const submitCreateRoleModalBtn = document.querySelector('#submitCreateRoleModal');
 const roleNameInput = document.querySelector('#roleName');
 const roleDescriptionInput = document.querySelector('#roleDescription');
-
 const closeAssignRoleBtn = document.querySelector('#closeAssignUsersModal');
 const closeAssignRoleGroupBtn = document.querySelector('#closeAssignGroupsModal');
 const assignRoleToUserModal = document.querySelector('.assignRoleToUserModal');
 const assignRoleToGroupModal = document.querySelector('.assignRoleToGroupModal');
-
-
-
-// Form elements
 const addUsersToRoleForm = document.querySelector('#assignRolesToUserForm');
 const assignUserSubmitBtn = document.querySelector('#assignRolesToUserForm button[type="submit"]');
-
-
 const addGroupsToRoleForm = document.querySelector('#assignRolesToGroupForm');
 const assignGroupSubmitBtn = document.querySelector('#assignRolesToGroupForm button[type="submit"]');
-
-// Button elements
-
-
-
-// Select elements
 const usersSelectRole = document.querySelector('#usersSelectRole');
 const groupsSelect = document.querySelector('#groupsSelect');
-
-// Table body for role assignments
 
 
 
 createRoleBtn.addEventListener('click', () => showModal(createRoleModal));
 closeCreateRoleModalBtn.addEventListener('click', () => hideModal(createRoleModal));
 submitCreateRoleModalBtn.addEventListener('click', createRole);
-
 closeAssignRoleBtn.addEventListener('click', () => hideModal(assignRoleToUserModal));
-
 closeAssignRoleGroupBtn.addEventListener('click', () => hideModal(assignRoleToGroupModal));
 
 
@@ -509,10 +411,6 @@ function createRole() {
     renderRoles();
     hideModal(createRoleModal);
 }
-
-
-
-
 
 function renderRoles() {
     const rolesTableBody = document.querySelector('#rolesTable tbody');
@@ -549,28 +447,23 @@ function renderRoles() {
     }
 }
 
-
-
 function assignRoleToUser(roleId) {
     showModal(assignRoleToUserModal);
     
-    const roles = JSON.parse(localStorage.getItem('roles')) || [];
+    const roles = JSON.parse(localStorage.getItem('roles')) ;
     const role = roles.find(r => r.id === roleId);
     
-    const users = JSON.parse(localStorage.getItem('users')) || [];
+    const users = JSON.parse(localStorage.getItem('users')) ;
     usersSelectRole.innerHTML = users.map(user => `<option value="${user.id}">${user.userName}</option>`).join('');
     assignUserSubmitBtn.disabled = users.length === 0;
 
     addUsersToRoleForm.onsubmit = function (event) {
         event.preventDefault();
-        
-        // Get existing assigned users from the role
-        const existingAssignedUsers = role.assignedUsers || [];
-        
-        // Get selected user IDs from the form
+    
+        const existingAssignedUsers = role.assignedUsers;
+
         const selectedUserIds = Array.from(usersSelectRole.selectedOptions).map(option => option.textContent);
-        
-        // Merge new users with existing assigned users
+
         role.assignedUsers = Array.from(new Set([...existingAssignedUsers, ...selectedUserIds]));
         
         localStorage.setItem('roles', JSON.stringify(roles));
@@ -579,25 +472,20 @@ function assignRoleToUser(roleId) {
     };
 }
 
-
-
-
-
-// Function to assign roles to groups
 function assignRoleToGroup(roleId) {
     showModal(assignRoleToGroupModal);
     
-    const roles = JSON.parse(localStorage.getItem('roles')) || [];
+    const roles = JSON.parse(localStorage.getItem('roles'));
     const role = roles.find(r => r.id === roleId);
     
-    const groups = JSON.parse(localStorage.getItem('groups')) || [];
+    const groups = JSON.parse(localStorage.getItem('groups'));
     groupsSelect.innerHTML = groups.map(group => `<option value="${group.id}">${group.groupName}</option>`).join('');
     assignGroupSubmitBtn.disabled = groups.length === 0;
 
     addGroupsToRoleForm.onsubmit = function (event) {
         event.preventDefault();
         
-        const existingAssignedGroups = role.assignedGroups || [];
+        const existingAssignedGroups = role.assignedGroups;
         
         const selectedGroupIds = Array.from(groupsSelect.selectedOptions).map(option => option.textContent);
         
@@ -609,13 +497,10 @@ function assignRoleToGroup(roleId) {
     };
 }
 
-
-// Function to render role assignments table
 function renderRoleAssignments() {
     const roleAssignmentsTableBody = document.querySelector('#roleAssignmentsTable tbody');
     const roles = JSON.parse(localStorage.getItem('roles')) || [];
 
-    // Filter roles to only include those with non-empty assignedUsers or assignedGroups
     const filteredRoles = roles.filter(role => 
         role.assignedUsers.length > 0 || role.assignedGroups.length > 0
     );
@@ -626,7 +511,7 @@ function renderRoleAssignments() {
         roleAssignmentsTableBody.innerHTML = '<tr><td colspan="3" class="no-roles">No roles assigned</td></tr>';
     } else {
         filteredRoles.forEach(role => {
-            const assignedUsers = role.assignedUsers || [];
+            const assignedUsers = role.assignedUsers ;
             const assignedGroups = role.assignedGroups || [];
             const usersContent = assignedUsers.length ? assignedUsers.join(', ') : 'No users assigned';
             const groupsContent = assignedGroups.length ? assignedGroups.join(', ') : 'No groups assigned';
@@ -643,21 +528,7 @@ function renderRoleAssignments() {
     }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//* exports
 
 module.exports = {
     renderUsers,
@@ -669,15 +540,18 @@ module.exports = {
 };
 
 
+
+
+
 // function handleSearch(event) {
 //     const searchValue = event.target.value.toLowerCase();
 //     const roles = JSON.parse(localStorage.getItem('roles')) || [];
 //     const filteredRoles = roles.filter(role => role.name.toLowerCase().includes(searchValue));
 //     const rolesTableBody = document.querySelector('#rolesTable tbody');
-    
+
 //     // Clear existing rows
 //     rolesTableBody.innerHTML = '';
-    
+
 //     if (filteredRoles.length === 0) {
 //         // Display "No search results found" message
 //         const noResultsMessage = document.createElement('tr');

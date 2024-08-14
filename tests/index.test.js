@@ -66,7 +66,6 @@ describe('Dynamic sidebar', () => {
 
 describe('DOMContentLoaded event listener', () => {
 
-    let userPage,groupPage,rolePage,userTab,groupTab,roleTab;
     let sidebarLinks, contentSections;
 
     beforeEach(() => {
@@ -141,7 +140,6 @@ describe('User Page', () => {
         const html = fs.readFileSync(path.resolve(__dirname, '../index.html'), 'utf8');
         document.body.innerHTML = html;
 
-        // ({} = require('./script.js'));
         require('../script.js');
 
     
@@ -1023,7 +1021,7 @@ describe('Role Page', () => {
         clearLocalStorage();
     });
 
-    describe('Adding Roles', () => {
+    describe('Creating Roles', () => {
 
         it('should display add role form when create role is clicked', () => {
 
@@ -1100,6 +1098,26 @@ describe('Role Page', () => {
             expect(roles[0].name).toBe('Role 1');
             expect(roles[1].name).toBe('Role 2');
         });
+
+        it('should handle the creation of multiple roles correctly', () => {
+            const roleNameInput = document.querySelector('#roleName');
+            const roleDescriptionInput = document.querySelector('#roleDescription');
+            const submitBtn = document.querySelector('#submitCreateRoleModal');
+        
+            roleNameInput.value = "Role 1";
+            roleDescriptionInput.value = "Description for Role 1";
+            submitBtn.click();
+        
+            roleNameInput.value = "Role 2";
+            roleDescriptionInput.value = "Description for Role 2";
+            submitBtn.click();
+        
+            const roles = getLocalStorageItem('roles');
+            expect(roles.length).toBe(2);
+            expect(roles[0].name).toBe("Role 1");
+            expect(roles[1].name).toBe("Role 2");
+        });
+        
     });
 
     describe('Viewing Roles', () => {
@@ -1149,73 +1167,6 @@ describe('Role Page', () => {
             expect(tableRows[0].textContent).toContain("Role 1");
         });
     });
-
-    // describe('Search Roles', () => {
-    //     beforeEach(() => {
-    //         ({ renderRoles } = require('../script.js'));
-    //     });
-
-    //     it.only('should display matching roles when searched', () => {
-    //         setLocalStorageItem('roles', JSON.stringify([
-    //             { id: 1, name: "Role 1", description: "Description for Role 1" },
-    //             { id: 2, name: "hai", description: "Description for Role 2" }
-    //         ]));
-
-    //         renderRoles();
-
-    //         const searchInput = document.querySelector('#searchRole');
-    //         searchInput.value = 'Role 1';
-    //         searchInput.dispatchEvent(new Event('input'));
-
-    //         const tableRows = document.querySelectorAll('#rolesTable tbody tr');
-    //         //expect(tableRows.length).toBe(1);
-    //         expect(tableRows[0].textContent).toContain('Role 1');
-   
-    //     });
-
-    //     it('should display "No search results found" when no roles match the search', () => {
-    //         setLocalStorageItem('roles', JSON.stringify([
-    //             { id: 1, name: "Role 1", description: "Description for Role 1" }
-    //         ]));
-
-    //         renderRoles();
-
-    //         const searchInput = document.querySelector('#searchRole');
-    //         searchInput.value = 'N';
-    //         searchInput.dispatchEvent(new Event('input'));
-
-    //         const tableRows = document.querySelectorAll('#rolesTable tbody tr');
-    //         expect(tableRows.length).toBe(1);
-    //         expect(tableRows[0].textContent).toContain('No search results found');
-    //     });
-
-    //     it('should restore all roles when search is cleared', () => {
-    //         setLocalStorageItem('roles', JSON.stringify([
-    //             { id: 1, name: "Role 1", description: "Description for Role 1" },
-    //             { id: 2, name: "Role 2", description: "Description for Role 2" }
-    //         ]));
-
-    //         renderRoles();
-
-    //         const searchInput = document.querySelector('#searchRole');
-    //         searchInput.value = 'Role 1';
-    //         searchInput.dispatchEvent(new Event('input'));
-
-    //         const tableRowsBefore = document.querySelectorAll('#rolesTable tbody tr');
-    //         expect(tableRowsBefore.length).toBe(2);
-    //         expect(tableRowsBefore[0].textContent).toContain('Role 1');
-    //         expect(tableRowsBefore[1].textContent).toContain('Role 2');
-
-    //         searchInput.value = null;
-    //         searchInput.dispatchEvent(new Event('input'));
-
-
-    //         const tableRows = document.querySelectorAll('#rolesTable tbody tr');
-    //         expect(tableRows.length).toBe(2);
-    //         expect(tableRows[0].textContent).toContain('Role 1');
-    //         expect(tableRows[1].textContent).toContain('Role 2');
-    //     });
-    // });
 
     describe('Assign users to Role', () => {
 
@@ -1277,6 +1228,35 @@ describe('Role Page', () => {
             const roles = getLocalStorageItem('roles');
             expect(roles[0].assignedUsers).toEqual(['User 1', 'User 2']);
         });
+
+        it('should correctly assign users to multiple roles', () => {
+            setLocalStorageItem('roles', JSON.stringify([
+                { id: 1, name: "Role 1", assignedUsers: [],assignedGroups: [] },
+                { id: 2, name: "Role 2", assignedUsers: [],assignedGroups: [] }
+            ]));
+            setLocalStorageItem('users', JSON.stringify([{ id: 1, userName: "User 1" }, { id: 2, userName: "User 2" }]));
+        
+            renderRoles();
+            const assignUserBtnRole1 = document.querySelector('#roleActions-1 .assignUser');
+            assignUserBtnRole1.click();
+        
+            const userSelect = document.querySelector('#usersSelectRole');
+            userSelect.options[0].selected = true;
+        
+            const assignUsersToRoleBtn = document.querySelector('#assignRolesToUserForm button[type="submit"]');
+            assignUsersToRoleBtn.click();
+        
+            const assignUserBtnRole2 = document.querySelector('#roleActions-2 .assignUser');
+            assignUserBtnRole2.click();
+        
+            userSelect.options[1].selected = true;
+            assignUsersToRoleBtn.click();
+        
+            const roles = getLocalStorageItem('roles');
+            expect(roles[0].assignedUsers).toEqual(['User 1']);
+            expect(roles[1].assignedUsers).toEqual(['User 2']);
+        });
+        
 
         it('should close the modal when the close button is clicked', () => {
             const closeAssignUserBtn = document.querySelector('#closeAssignUsersModal');
