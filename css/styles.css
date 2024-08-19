@@ -381,52 +381,107 @@ body{
 }
 
 #addUserForm{
-    background-color: #fff;
+    background-color: #f0f0f0;
     padding: 2%;
     border-radius: 20px;
     width: 40%;
-    height: 60%;
-
+    height: 55%;
     position: relative;
     display: flex;
     flex-direction: column;
 }
 
-.addUserModal button[type="button"] {
+.modalTitle{
     width: 100%;
-    height: 10%;
+    height: 7%;
     display: flex;
-    justify-content: end;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 2%;
 }
+
+.modalTitle h1{
+    width: calc(100% - 30px);
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    
+}
+
+#closeAddUserModal,#closeUpdateUserModal {
+    width: 30px;
+    height: 100%;
+    outline: none;
+    border: none;
+    border-radius: 15px;
+    color: #6b6b6b;
+    background-color: transparent;
+    font-size: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    
+} 
+
+
 
 .addUserModal label {
     font-weight: bold;
+    font-size: large;
     margin-bottom: 5px;
     color: #333;
+    height: 7%;
 }
 
 .addUserModal input {
     padding: 8px;
     margin-bottom: 10px;
-    border: 1px solid #ccc;
+    border-color: #b9b9b9;
+    border-style: solid;
+    border-width: 1px;
+    outline-color: #1c1b2c;
     border-radius: 4px;
     font-size: 14px;
+    height: 10%;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
 }
 
+.addUserModalBtns{
+    width: 100%;
+    height: 22%;
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+}
 
-.addUserModal button[type="submit"],
 .addUserModal #clear {
+    height: 65%;
+    width: 49%;
     padding: 1%;
-
     border: none;
-    border-radius: 4px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 16px;
+    border-radius: 10px;
+    color: #585858;
+    font-weight: bolder;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
 }
+
 
 .addUserModal button[type="submit"] {
+    height: 65%;
+    width: 49%;
+    padding: 1%;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 10px;
     background-color: #4CAF50;
+    font-weight: bolder;
     color: white;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .addUserModal button[type="submit"]:hover {
@@ -434,13 +489,10 @@ body{
 }
 
 .addUserModal button[type="reset"] {
-    background-color: #f44336;
-    color: white;
+    background-color: #ffffff;
+    color: rgb(0, 0, 0);
 }
 
-.addUserModal button[type="reset"]:hover {
-    background-color: #e53935;
-}
 
 /* update user modal */
 .updateUserModal {
@@ -459,17 +511,86 @@ body{
 }
 
 #updateUserForm {
-    background-color: #fff;
+    background-color: #f0f0f0;
     padding: 2%;
     border-radius: 20px;
     width: 40%;
-    height: 60%;
+    height: 55%;
     position: relative;
     display: flex;
     flex-direction: column;
 }
 
-.updateUserModal button[type="button"] {
+
+
+
+.updateUserModal label {
+    font-weight: bold;
+    font-size: large;
+    margin-bottom: 5px;
+    color: #333;
+    height: 7%;
+}
+
+.updateUserModal input {
+    padding: 8px;
+    margin-bottom: 10px;
+    border-color: #b9b9b9;
+    border-style: solid;
+    border-width: 1px;
+    outline-color: #1c1b2c;
+    border-radius: 4px;
+    font-size: 14px;
+    height: 10%;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.updateUserModalBtns  {
+    width: 100%;
+    height: 22%;
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+}
+
+.updateUserModal #clearEdit {
+    height: 65%;
+    width: 49%;
+    padding: 1%;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 10px;
+    color: #585858;
+    font-weight: bolder;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+
+.updateUserModal button[type="submit"] {
+    height: 65%;
+    width: 49%;
+    padding: 1%;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 10px;
+    background-color: #4CAF50;
+    font-weight: bolder;
+    color: white;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.updateUserModal button[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+.updateUserModal button[type="reset"] {
+    background-color: #ffffff;
+    color: rgb(0, 0, 0);
+}
+
+/* .updateUserModal button[type="button"] {
     width: 100%;
     height: 10%;
     display: flex;
@@ -516,7 +637,7 @@ body{
 
 .updateUserModal button[type="button"]:hover {
     background-color: #e53935;
-}
+} */
 
 
 

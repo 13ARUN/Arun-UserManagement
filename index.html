@@ -53,8 +53,10 @@
         <!-- Add User Form -->
          <div class="addUserModal" style="display: none;">
             <form id="addUserForm" autocomplete="off">
-                <button id="closeAddUserModal" type="button">Close</button>
-                <h3>Add User</h3>
+                <div class="modalTitle">
+                    <h1>Create User</h1>
+                    <button id="closeAddUserModal" title="Close" type="button"><i class="fa-solid fa-xmark"></i></button>
+                </div>
                 <label for="userName">Username:</label>
                 <input type="text" id="userName" required>
                 <label for="email">Email:</label>
@@ -64,8 +66,9 @@
                 <label for="lastName">Last Name:</label>
                 <input type="text" id="lastName" required>
                 <div class="addUserModalBtns">
-                    <button id="submitAddUserModal" type="submit">Add User</button>
                     <button id="clear" type="reset">Clear</button>
+                    <button id="submitAddUserModal" type="submit">Add User</button>
+
                 </div>
             </form>
         </div>
@@ -98,7 +101,10 @@
         <!-- Update User Form -->
          <div class="updateUserModal" style="display:none;">
             <form id="updateUserForm" autocomplete="off">
-                <h3>Update User</h3>
+                <div class="modalTitle">
+                    <h1>Update User</h1>
+                    <button id="closeUpdateUserModal" title="Close" type="button"><i class="fa-solid fa-xmark"></i></button>
+                </div>
                 <label for="updateUsername">Username:</label>
                 <input type="text" id="updateUsername" required>
                 <label for="updateEmail">Email:</label>
@@ -108,8 +114,9 @@
                 <label for="updateLastName">Last Name:</label>
                 <input type="text" id="updateLastName" required>
                 <div class="updateUserModalBtns">
+                    <button id="clearEdit" type="reset">Clear</button>
                     <button id="submitUpdateUserModal" type="submit">Update User</button>
-                    <button id="cancelEdit" type="button">Cancel</button>
+                    
                 </div>
             </form>
         </div>

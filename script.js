@@ -88,11 +88,12 @@ const updateEmailInput = document.querySelector('#updateEmail');
 const updateFirstNameInput = document.querySelector('#updateFirstName');
 const updateLastNameInput = document.querySelector('#updateLastName');
 const cancelEditBtn = document.querySelector('#cancelEdit');
+const closeUpdateUserModal = document.querySelector('#closeUpdateUserModal');
 
 createUserBtn.addEventListener('click', () => toggleModal(createUserModal, 'flex'));
 closeBtn.addEventListener('click', () => toggleModal(createUserModal, 'none'));
 submitBtn.addEventListener('click', AddUser);
-cancelEditBtn.addEventListener('click', () => toggleModal(updateUserModal, 'none'));
+closeUpdateUserModal.addEventListener('click', () => toggleModal(updateUserModal, 'none'));
 
 
 function toggleModal(modal, displayStyle) {
@@ -172,18 +173,15 @@ function createUserRow(user) {
 }
 
 function deleteUser(userId) {
-    // Show confirmation dialog
     const confirmed = window.confirm("Are you sure you want to delete this user?");
 
     if (confirmed) {
-        // If confirmed, proceed with deletion
         const users = getUsersFromStorage();
         const updatedUsers = users.filter(user => user.id !== userId);
         saveUsersToStorage(updatedUsers);
         renderUsers();
         showNotification('User deleted successfully!');
     } else {
-        // If canceled, do nothing
         console.log("User deletion canceled");
     }
 }
