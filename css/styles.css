@@ -409,7 +409,7 @@ body{
     
 }
 
-#closeAddUserModal,#closeUpdateUserModal {
+#closeAddUserModal,#closeUpdateUserModal,#closeCreateGroupModal {
     width: 30px;
     height: 100%;
     outline: none;
@@ -590,55 +590,6 @@ body{
     color: rgb(0, 0, 0);
 }
 
-/* .updateUserModal button[type="button"] {
-    width: 100%;
-    height: 10%;
-    display: flex;
-    justify-content: end;
-}
-
-.updateUserModal label {
-    font-weight: bold;
-    margin-bottom: 5px;
-    color: #333;
-}
-
-.updateUserModal input {
-    padding: 8px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-.updateUserModal button[type="submit"],
-.updateUserModal #cancelEdit {
-    padding: 1%;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    height: 50px;
-}
-
-.updateUserModal button[type="submit"] {
-    background-color: #4CAF50;
-    color: white;
-}
-
-.updateUserModal button[type="submit"]:hover {
-    background-color: #45a049;
-}
-
-.updateUserModal button[type="button"] {
-    background-color: #f44336;
-    color: white;
-}
-
-.updateUserModal button[type="button"]:hover {
-    background-color: #e53935;
-} */
-
 
 
 
@@ -693,64 +644,153 @@ td button {
 }
 
 #createGroupForm {
-    background-color: #fff;
+    background-color: #f0f0f0;
     padding: 2%;
     border-radius: 20px;
-    width: 40%;
-    height: 60%;
+    width: 30%;
+    height: 30%;
     position: relative;
     display: flex;
     flex-direction: column;
 }
 
-.createGroupModal button[type="button"] {
+.modalTitle2{
     width: 100%;
-    height: 10%;
+    height: 20%;
     display: flex;
-    justify-content: end;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 2%;
 }
+
+.modalTitle2 h1{
+    width: calc(100% - 30px);
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    
+}
+
+#closeAddUserModal,#closeUpdateUserModal,#closeCreateGroupModal {
+    width: 30px;
+    height: 100%;
+    outline: none;
+    border: none;
+    border-radius: 15px;
+    color: #6b6b6b;
+    background-color: transparent;
+    font-size: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    
+} 
 
 .createGroupModal label {
     font-weight: bold;
+    font-size: large;
     margin-bottom: 5px;
     color: #333;
+    height: 15%;
 }
 
 .createGroupModal input {
     padding: 8px;
     margin-bottom: 10px;
-    border: 1px solid #ccc;
+    border-color: #b9b9b9;
+    border-style: solid;
+    border-width: 1px;
+    outline-color: #1c1b2c;
     border-radius: 4px;
     font-size: 14px;
+    height: 25%;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.createGroupModal button[type="submit"],
-.createGroupModal #cancelCreate {
+.createGroupModalBtns{
+    width: 100%;
+    height: 40%;
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+}
+
+.createGroupModal #clearGroup {
+    height: 65%;
+    width: 49%;
     padding: 1%;
     border: none;
-    border-radius: 4px;
     cursor: pointer;
-    font-size: 14px;
-    height: 50px;
+    font-size: 16px;
+    border-radius: 10px;
+    color: #585858;
+    font-weight: bolder;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
 }
 
+
 .createGroupModal button[type="submit"] {
+    height: 65%;
+    width: 49%;
+    padding: 1%;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 10px;
     background-color: #4CAF50;
+    font-weight: bolder;
     color: white;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .createGroupModal button[type="submit"]:hover {
     background-color: #45a049;
 }
 
-.createGroupModal button[type="button"] {
-    background-color: #f44336;
-    color: white;
+.createGroupModal button[type="reset"] {
+    background-color: #ffffff;
+    color: rgb(0, 0, 0);
 }
 
-.createGroupModal button[type="button"]:hover {
-    background-color: #e53935;
+
+
+
+
+.modalTitle3{
+    width: 100%;
+    height: 10%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 2%;
 }
+
+.modalTitle3 h1{
+    width: calc(100% - 30px);
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    
+}
+
+#closeAddUsertoGroupModal {
+    width: 30px;
+    height: 100%;
+    outline: none;
+    border: none;
+    border-radius: 15px;
+    color: #6b6b6b;
+    background-color: transparent;
+    font-size: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    
+} 
 
 .addUserToGroupModal {
     position: fixed;
@@ -768,64 +808,59 @@ td button {
 }
 
 #addUsersToGroupForm {
-    background-color: #fff;
+    background-color: #f0f0f0;
     padding: 2%;
     border-radius: 20px;
-    width: 40%;
-    height: 40%;
+    width: 30%;
+    height: 50%;
     position: relative;
     display: flex;
     flex-direction: column;
 }
 
-.addUserToGroupModal button[type="button"] {
-    width: 100%;
-    height: 10%;
-    display: flex;
-    justify-content: end;
-}
-
 .addUserToGroupModal label {
     font-weight: bold;
+    font-size: large;
     margin-bottom: 5px;
     color: #333;
+    height: 10%;
 }
 
 .addUserToGroupModal select {
     padding: 8px;
     margin-bottom: 10px;
-    border: 1px solid #ccc;
+    border-color: #b9b9b9;
+    border-style: solid;
+    border-width: 1px;
+    outline-color: #1c1b2c;
     border-radius: 4px;
     font-size: 14px;
+    height: 60%;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.addUserToGroupModal button[type="submit"],
-.addUserToGroupModal #cancelAdd {
-    padding: 1%;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    height: 50px;
+.addUsertoGroupModalBtns{
+    width: 100%;
+    height: 20%;
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
 }
 
 .addUserToGroupModal button[type="submit"] {
+    height: 70%;
+    width: 100%;
+    padding: 1%;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 10px;
     background-color: #4CAF50;
+    font-weight: bolder;
     color: white;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-.addUserToGroupModal button[type="submit"]:hover {
-    background-color: #45a049;
-}
-
-.addUserToGroupModal button[type="button"] {
-    background-color: #f44336;
-    color: white;
-}
-
-.addUserToGroupModal button[type="button"]:hover {
-    background-color: #e53935;
-}
 
 .removeUserFromGroup {
     position: fixed;
@@ -853,53 +888,89 @@ td button {
     flex-direction: column;
 }
 
-.removeUserFromGroup button[type="button"] {
-    width: 100%;
-    height: 10%;
+#closeRemoveUserfromGroupModal {
+    width: 30px;
+    height: 100%;
+    outline: none;
+    border: none;
+    border-radius: 15px;
+    color: #6b6b6b;
+    background-color: transparent;
+    font-size: 25px;
     display: flex;
-    justify-content: end;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    
+} 
+
+.removeUserFromGroup {
+    position: fixed;
+    top: 0%;
+    left: 0%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: saturate(180%) blur(5px);
+    transition: visibility 0.3s, opacity 0.3s ease;
+}
+
+#removeUserFromGroup {
+    background-color: #f0f0f0;
+    padding: 2%;
+    border-radius: 20px;
+    width: 30%;
+    height: 50%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
 }
 
 .removeUserFromGroup label {
     font-weight: bold;
+    font-size: large;
     margin-bottom: 5px;
     color: #333;
+    height: 10%;
 }
 
 .removeUserFromGroup select {
     padding: 8px;
     margin-bottom: 10px;
-    border: 1px solid #ccc;
+    border-color: #b9b9b9;
+    border-style: solid;
+    border-width: 1px;
+    outline-color: #1c1b2c;
     border-radius: 4px;
     font-size: 14px;
+    height: 60%;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.removeUserFromGroup button[type="submit"],
-.removeUserFromGroup #cancelRemove {
-    padding: 1%;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    height: 50px;
+.removeUserfromGroupModalBtns{
+    width: 100%;
+    height: 20%;
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
 }
 
 .removeUserFromGroup button[type="submit"] {
+    height: 70%;
+    width: 100%;
+    padding: 1%;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 10px;
     background-color: #4CAF50;
+    font-weight: bolder;
     color: white;
-}
-
-.removeUserFromGroup button[type="submit"]:hover {
-    background-color: #45a049;
-}
-
-.removeUserFromGroup button[type="button"] {
-    background-color: #f44336;
-    color: white;
-}
-
-.removeUserFromGroup button[type="button"]:hover {
-    background-color: #e53935;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 
@@ -929,137 +1000,129 @@ td button {
     padding: 2%;
     border-radius: 20px;
     width: 40%;
-    height: 60%;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-}
-
-.createRoleModal button[type="button"] {
-    width: 100%;
-    height: 10%;
-    display: flex;
-    justify-content: end;
-}
-
-.createRoleModal label {
-    font-weight: bold;
-    margin-bottom: 5px;
-    color: #333;
-}
-
-.createRoleModal input {
-    padding: 8px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-.createRoleModal button[type="submit"],
-.createRoleModal #cancelCreate {
-    padding: 1%;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    height: 50px;
-}
-
-.createRoleModal button[type="submit"] {
-    background-color: #4CAF50;
-    color: white;
-}
-
-.createRoleModal button[type="submit"]:hover {
-    background-color: #45a049;
-}
-
-.createRoleModal button[type="button"] {
-    background-color: #f44336;
-    color: white;
-}
-
-.createRoleModal button[type="button"]:hover {
-    background-color: #e53935;
-}
-
-/** Assign Role Modal */
-
-.assignRoleModal {
-    position: fixed;
-    top: 0%;
-    left: 0%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    z-index: 100;
-    background-color: rgba(0, 0, 0, 0.5);
-    backdrop-filter: saturate(180%) blur(5px);
-    transition: visibility 0.3s, opacity 0.3s ease;
-}
-
-#assignRoleForm {
-    background-color: #fff;
-    padding: 2%;
-    border-radius: 20px;
-    width: 40%;
     height: 50%;
     position: relative;
     display: flex;
     flex-direction: column;
 }
 
-.assignRoleModal button[type="button"] {
+.modalTitle4{
     width: 100%;
     height: 10%;
     display: flex;
-    justify-content: end;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 2%;
 }
 
-.assignRoleModal label {
+.modalTitle4 h1{
+    width: calc(100% - 30px);
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    
+}
+
+#closeCreateRoleModal {
+    width: 30px;
+    height: 100%;
+    outline: none;
+    border: none;
+    border-radius: 15px;
+    color: #6b6b6b;
+    background-color: transparent;
+    font-size: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    
+} 
+
+.createRoleModal label {
     font-weight: bold;
+    font-size: large;
     margin-bottom: 5px;
     color: #333;
+    height: 10%;
 }
 
-.assignRoleModal select {
+.createRoleModal input {
     padding: 8px;
     margin-bottom: 10px;
-    border: 1px solid #ccc;
+    border-color: #b9b9b9;
+    border-style: solid;
+    border-width: 1px;
+    outline-color: #1c1b2c;
     border-radius: 4px;
     font-size: 14px;
+    height: 12%;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.assignRoleModal button[type="submit"],
-.assignRoleModal #cancelAssign {
+.createRoleModal #roleDescription {
+    resize: none;
+    height: 37%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border-color: #b9b9b9;
+    border-style: solid;
+    border-width: 1px;
+    outline-color: #1c1b2c;
+    border-radius: 4px;
+    font-size: 14px;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.createRoleModalBtns{
+    width: 100%;
+    height: 20%;
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+}
+
+.createRoleModal #clearRole {
+    height: 65%;
+    width: 49%;
     padding: 1%;
     border: none;
-    border-radius: 4px;
     cursor: pointer;
-    font-size: 14px;
-    height: 50px;
+    font-size: 16px;
+    border-radius: 10px;
+    color: #585858;
+    font-weight: bolder;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-.assignRoleModal button[type="submit"] {
+
+.createRoleModal button[type="submit"] {
+    height: 65%;
+    width: 49%;
+    padding: 1%;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 10px;
     background-color: #4CAF50;
+    font-weight: bolder;
     color: white;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-.assignRoleModal button[type="submit"]:hover {
+.createRoleModal button[type="submit"]:hover {
     background-color: #45a049;
 }
 
-.assignRoleModal button[type="button"] {
-    background-color: #f44336;
-    color: white;
+.createRoleModal button[type="reset"] {
+    background-color: #ffffff;
+    color: rgb(0, 0, 0);
 }
 
-.assignRoleModal button[type="button"]:hover {
-    background-color: #e53935;
-}
+
+/** Assign Role Modal */
+
 
 /** View Role Assignments Modal */
 
@@ -1142,6 +1205,24 @@ td button {
 
 
 /** Assign Users Modal */
+
+
+#closeAssignUsersModal {
+    width: 30px;
+    height: 100%;
+    outline: none;
+    border: none;
+    border-radius: 15px;
+    color: #6b6b6b;
+    background-color: transparent;
+    font-size: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    
+} 
+
 .assignRoleToUserModal {
     position: fixed;
     top: 0%;
@@ -1158,66 +1239,77 @@ td button {
 }
 
 #assignRolesToUserForm {
-    background-color: #fff;
+    background-color: #f0f0f0;
     padding: 2%;
     border-radius: 20px;
-    width: 40%;
+    width: 30%;
     height: 50%;
     position: relative;
     display: flex;
     flex-direction: column;
 }
 
-.assignRoleToUserModal button[type="button"] {
-    width: 100%;
-    height: 10%;
-    display: flex;
-    justify-content: end;
-}
-
 .assignRoleToUserModal label {
     font-weight: bold;
+    font-size: large;
     margin-bottom: 5px;
     color: #333;
+    height: 10%;
 }
 
 .assignRoleToUserModal select {
     padding: 8px;
     margin-bottom: 10px;
-    border: 1px solid #ccc;
+    border-color: #b9b9b9;
+    border-style: solid;
+    border-width: 1px;
+    outline-color: #1c1b2c;
     border-radius: 4px;
     font-size: 14px;
+    height: 60%;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.assignRoleToUserModal button[type="submit"],
-.assignRoleToUserModal #cancelAssign {
-    padding: 1%;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    height: 50px;
+.assignUserModalBtns{
+    width: 100%;
+    height: 20%;
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
 }
 
 .assignRoleToUserModal button[type="submit"] {
+    height: 70%;
+    width: 100%;
+    padding: 1%;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 10px;
     background-color: #4CAF50;
+    font-weight: bolder;
     color: white;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-.assignRoleToUserModal button[type="submit"]:hover {
-    background-color: #45a049;
-}
-
-.assignRoleToUserModal button[type="button"] {
-    background-color: #f44336;
-    color: white;
-}
-
-.assignRoleToUserModal button[type="button"]:hover {
-    background-color: #e53935;
-}
 
 /** Assign Groups Modal */
+#closeAssignGroupsModal {
+    width: 30px;
+    height: 100%;
+    outline: none;
+    border: none;
+    border-radius: 15px;
+    color: #6b6b6b;
+    background-color: transparent;
+    font-size: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    
+} 
+
 .assignRoleToGroupModal {
     position: fixed;
     top: 0%;
@@ -1234,65 +1326,58 @@ td button {
 }
 
 #assignRolesToGroupForm {
-    background-color: #fff;
+    background-color: #f0f0f0;
     padding: 2%;
     border-radius: 20px;
-    width: 40%;
+    width: 30%;
     height: 50%;
     position: relative;
     display: flex;
     flex-direction: column;
 }
 
-.assignRoleToGroupModal button[type="button"] {
-    width: 100%;
-    height: 10%;
-    display: flex;
-    justify-content: end;
-}
-
 .assignRoleToGroupModal label {
     font-weight: bold;
+    font-size: large;
     margin-bottom: 5px;
     color: #333;
+    height: 10%;
 }
 
 .assignRoleToGroupModal select {
     padding: 8px;
     margin-bottom: 10px;
-    border: 1px solid #ccc;
+    border-color: #b9b9b9;
+    border-style: solid;
+    border-width: 1px;
+    outline-color: #1c1b2c;
     border-radius: 4px;
     font-size: 14px;
+    height: 60%;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.assignRoleToGroupModal button[type="submit"],
-.assignRoleToGroupModal #cancelAssign {
-    padding: 1%;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    height: 50px;
+.assignGroupModalBtns{
+    width: 100%;
+    height: 20%;
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
 }
 
 .assignRoleToGroupModal button[type="submit"] {
+    height: 70%;
+    width: 100%;
+    padding: 1%;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 10px;
     background-color: #4CAF50;
+    font-weight: bolder;
     color: white;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
 }
-
-.assignRoleToGroupModal button[type="submit"]:hover {
-    background-color: #45a049;
-}
-
-.assignRoleToGroupModal button[type="button"] {
-    background-color: #f44336;
-    color: white;
-}
-
-.assignRoleToGroupModal button[type="button"]:hover {
-    background-color: #e53935;
-}
-
 
 .notification {
     display: none;

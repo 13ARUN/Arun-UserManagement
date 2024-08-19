@@ -116,7 +116,6 @@
                 <div class="updateUserModalBtns">
                     <button id="clearEdit" type="reset">Clear</button>
                     <button id="submitUpdateUserModal" type="submit">Update User</button>
-                    
                 </div>
             </form>
         </div>
@@ -130,11 +129,16 @@
         <!-- Create Group Form -->
          <div class="createGroupModal" style="display: none;">
             <form id="createGroupForm" autocomplete="off">
-                <button id="closeCreateGroupModal" type="button">Close</button>
-                <h3>Create Group</h3>
+                <div class="modalTitle2">
+                    <h1>Create Group</h1>
+                    <button id="closeCreateGroupModal" title="Close" type="button"><i class="fa-solid fa-xmark"></i></button>
+                </div>
                 <label for="groupName">Group Name:</label>
                 <input type="text" id="groupName" required>
-                <button id="submitCreateGroupModal" type="submit">Create Group</button>
+                <div class="createGroupModalBtns">
+                    <button id="clearGroup" type="reset">Clear</button>
+                    <button id="submitCreateGroupModal" type="submit">Create Group</button>
+                </div>
             </form>
         </div>
 
@@ -163,21 +167,30 @@
         <!-- Add Users to Group Form -->
         <div class="addUserToGroupModal" style="display: none;">
             <form id="addUsersToGroupForm" autocomplete="off">
-                <button id="closeAddUser" type="button">Close</button>
-                <h3>Add Users to Group</h3>
+                <div class="modalTitle3">
+                    <h1>Add Users to Group</h1>
+                    <button id="closeAddUsertoGroupModal" title="Close" type="button"><i class="fa-solid fa-xmark"></i></button>
+                </div>
                 <label for="usersSelect">Select Users:</label>
                 <select id="usersSelect" multiple required></select>
-                <button type="submit"></button>
+                <div class="addUsertoGroupModalBtns">
+                    <button type="submit"></button>
+                </div>
+               
             </form>
         </div>
 
         <div class="removeUserFromGroup" style="display: none;">
             <form id="removeUserFromGroup" autocomplete="off">
-                <button id="closeRemoveUser" type="button">Close</button>
-                <h3>Remove Users from Group</h3>
+                <div class="modalTitle3">
+                    <h1>Remove Users from Group</h1>
+                    <button id="closeRemoveUserfromGroupModal" title="Close" type="button"><i class="fa-solid fa-xmark"></i></button>
+                </div>
                 <label for="usersSelectRemove">Select Users:</label>
                 <select id="usersSelectRemove" multiple required></select>
-                <button type="submit">Remove Users from Group</button>
+                <div class="removeUserfromGroupModalBtns">
+                    <button type="submit"></button>
+                </div>
             </form>
         </div>
 
@@ -191,13 +204,19 @@
         <!-- Create Role Form -->
          <div class="createRoleModal" style="display: none;">
             <form id="createRoleForm" autocomplete="off">
-                <button id="closeCreateRoleModal" type="button">Close</button>
-                <h3>Create Role</h3>
+                <div class="modalTitle4">
+                    <h1>Create Role</h1>
+                    <button id="closeCreateRoleModal" title="Close" type="button"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+
                 <label for="roleName">Role Name:</label>
                 <input type="text" id="roleName" required>
                 <label for="roleDescription">Role Description:</label>
                 <textarea id="roleDescription" rows="4" cols="50"></textarea>
-                <button type="submit" id="submitCreateRoleModal">Create Role</button>
+                <div class="createRoleModalBtns">
+                    <button id="clearRole" type="reset">Clear</button>
+                    <button id="submitCreateRoleModal" type="submit">Create Role</button>
+                </div>
             </form>
         </div>
 
@@ -232,23 +251,31 @@
         <!-- Assign Roles to User Form -->
         <div class="assignRoleToUserModal" style="display: none;">
             <form id="assignRolesToUserForm" autocomplete="off">
-                <button id="closeAssignUsersModal" type="button">Close</button>
-                <h3>Assign Users</h3>
+                <div class="modalTitle3">
+                    <h1>Assign Role to Users</h1>
+                    <button id="closeAssignUsersModal" title="Close" type="button"><i class="fa-solid fa-xmark"></i></button>
+                </div>
                 <label for="usersSelectRole">Select Users:</label>
                 <select id="usersSelectRole" multiple required></select>
-                <button type="submit">Assign Role to Users</button>
+                <div class="assignUserModalBtns">
+                    <button type="submit">Assign Role</button>
+                </div>
             </form>
         </div>
 
         <!-- Assign Roles to Group Form -->
         <div class="assignRoleToGroupModal" style="display: none;">
+            
             <form id="assignRolesToGroupForm" autocomplete="off">
-                <button id="closeAssignGroupsModal" type="button">Close</button>
-                <h3>Assign Groups</h3>
-
+                <div class="modalTitle3">
+                    <h1>Assign Role to Groups</h1>
+                    <button id="closeAssignGroupsModal" title="Close" type="button"><i class="fa-solid fa-xmark"></i></button>
+                </div>
                 <label for="groupsSelect">Select Groups:</label>
                 <select id="groupsSelect" multiple required></select>
-                <button type="submit">Assign Role to Groups</button>
+                <div class="assignGroupModalBtns">
+                    <button type="submit">Assign Role</button>
+                </div>
             </form>
         </div>
 

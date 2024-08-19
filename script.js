@@ -161,7 +161,7 @@ function createUserRow(user) {
         <td class="userFname-${user.id}">${user.firstName}</td>
         <td class="userLname-${user.id}">${user.lastName}</td>
         <td class="actions" id="userActions-${user.id}">
-            <button title="edit" class="editUser"><i class="fa-solid fa-pen-to-square"></i> Edit User</button>
+            <button title="edit" class="editUser"><i class="fa-solid fa-pen-to-square"></i> Update User</button>
             <button title="delete" class="deleteUser"><i class="fa-solid fa-trash"></i> Delete User</button>
         </td>
     `;
@@ -233,12 +233,12 @@ const addUserToGroupModal = document.querySelector('.addUserToGroupModal');
 const usersSelect = document.querySelector('#usersSelect');
 const addUsersToGroupForm = document.querySelector('#addUsersToGroupForm');
 const addUserSubmitBtn = document.querySelector('#addUsersToGroupForm button[type="submit"]');
-const closeAddUserBtn = document.querySelector('#closeAddUser');
+const closeAddUserBtn = document.querySelector('#closeAddUsertoGroupModal');
 
 const removeUserFromGroupModal = document.querySelector('.removeUserFromGroup');
 const userSelect = document.querySelector('#usersSelectRemove');
 const removeUsersFromGroupForm = document.querySelector('#removeUserFromGroup');
-const closeRemoveUserBtn = document.querySelector('#closeRemoveUser');
+const closeRemoveUserBtn = document.querySelector('#closeRemoveUserfromGroupModal');
 const removeUserSubmitBtn = document.querySelector('#removeUserFromGroup button[type="submit"]');
 
 createGroupBtn.addEventListener('click', () => showModal(createGroupModal));
