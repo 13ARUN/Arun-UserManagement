@@ -1,3 +1,35 @@
+document.addEventListener('click', function(e) {
+    if (e.target.tagName !== 'TH') return;
+
+    let tableId = e.target.closest('table').id; 
+    let th = e.target;
+
+    let order = th.dataset.order === 'asc' ? 'desc' : 'asc';
+    th.dataset.order = order;
+
+    sortGrid(tableId, th.cellIndex, order);
+});
+
+function sortGrid(tableId, colNum, order) {
+    let tbody = document.querySelector(`#${tableId}`).querySelector('tbody');
+    let rowsArray = Array.from(tbody.rows);
+
+    let compare = function(rowA, rowB) {
+        let cellA = rowA.cells[colNum].innerHTML;
+        let cellB = rowB.cells[colNum].innerHTML;
+
+        if (order === 'asc') {
+            return cellA.toLowerCase() > cellB.toLowerCase() ? 1 : -1;
+        } else {
+            return cellA.toLowerCase() < cellB.toLowerCase() ? 1 : -1;
+        }
+    };
+
+    rowsArray.sort(compare);
+    tbody.append(...rowsArray);
+}
+
+
 
 
 
