@@ -1,3 +1,35 @@
+document.addEventListener('click', function(e) {
+    if (e.target.tagName !== 'TH') return;
+
+    let tableId = e.target.closest('table').id; 
+    let th = e.target;
+
+    let order = th.dataset.order === 'asc' ? 'desc' : 'asc';
+    th.dataset.order = order;
+
+    sortGrid(tableId, th.cellIndex, order);
+});
+
+function sortGrid(tableId, colNum, order) {
+    let tbody = document.querySelector(`#${tableId}`).querySelector('tbody');
+    let rowsArray = Array.from(tbody.rows);
+
+    let compare = function(rowA, rowB) {
+        let cellA = rowA.cells[colNum].innerHTML;
+        let cellB = rowB.cells[colNum].innerHTML;
+
+        if (order === 'asc') {
+            return cellA.toLowerCase() > cellB.toLowerCase() ? 1 : -1;
+        } else {
+            return cellA.toLowerCase() < cellB.toLowerCase() ? 1 : -1;
+        }
+    };
+
+    rowsArray.sort(compare);
+    tbody.append(...rowsArray);
+}
+
+
 
 
 
@@ -88,11 +120,12 @@ const updateEmailInput = document.querySelector('#updateEmail');
 const updateFirstNameInput = document.querySelector('#updateFirstName');
 const updateLastNameInput = document.querySelector('#updateLastName');
 const cancelEditBtn = document.querySelector('#cancelEdit');
+const closeUpdateUserModal = document.querySelector('#closeUpdateUserModal');
 
 createUserBtn.addEventListener('click', () => toggleModal(createUserModal, 'flex'));
 closeBtn.addEventListener('click', () => toggleModal(createUserModal, 'none'));
 submitBtn.addEventListener('click', AddUser);
-cancelEditBtn.addEventListener('click', () => toggleModal(updateUserModal, 'none'));
+closeUpdateUserModal.addEventListener('click', () => toggleModal(updateUserModal, 'none'));
 
 
 function toggleModal(modal, displayStyle) {
@@ -160,7 +193,7 @@ function createUserRow(user) {
         <td class="userFname-${user.id}">${user.firstName}</td>
         <td class="userLname-${user.id}">${user.lastName}</td>
         <td class="actions" id="userActions-${user.id}">
-            <button title="edit" class="editUser"><i class="fa-solid fa-pen-to-square"></i> Edit User</button>
+            <button title="edit" class="editUser"><i class="fa-solid fa-pen-to-square"></i> Update User</button>
             <button title="delete" class="deleteUser"><i class="fa-solid fa-trash"></i> Delete User</button>
         </td>
     `;
@@ -172,18 +205,15 @@ function createUserRow(user) {
 }
 
 function deleteUser(userId) {
-    // Show confirmation dialog
     const confirmed = window.confirm("Are you sure you want to delete this user?");
 
     if (confirmed) {
-        // If confirmed, proceed with deletion
         const users = getUsersFromStorage();
         const updatedUsers = users.filter(user => user.id !== userId);
         saveUsersToStorage(updatedUsers);
         renderUsers();
         showNotification('User deleted successfully!');
     } else {
-        // If canceled, do nothing
         console.log("User deletion canceled");
     }
 }
@@ -235,12 +265,12 @@ const addUserToGroupModal = document.querySelector('.addUserToGroupModal');
 const usersSelect = document.querySelector('#usersSelect');
 const addUsersToGroupForm = document.querySelector('#addUsersToGroupForm');
 const addUserSubmitBtn = document.querySelector('#addUsersToGroupForm button[type="submit"]');
-const closeAddUserBtn = document.querySelector('#closeAddUser');
+const closeAddUserBtn = document.querySelector('#closeAddUsertoGroupModal');
 
 const removeUserFromGroupModal = document.querySelector('.removeUserFromGroup');
 const userSelect = document.querySelector('#usersSelectRemove');
 const removeUsersFromGroupForm = document.querySelector('#removeUserFromGroup');
-const closeRemoveUserBtn = document.querySelector('#closeRemoveUser');
+const closeRemoveUserBtn = document.querySelector('#closeRemoveUserfromGroupModal');
 const removeUserSubmitBtn = document.querySelector('#removeUserFromGroup button[type="submit"]');
 
 createGroupBtn.addEventListener('click', () => showModal(createGroupModal));
