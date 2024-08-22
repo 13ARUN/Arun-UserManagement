@@ -565,55 +565,6 @@ function renderRoleAssignments() {
     }
 }
 
-function handleSearch(event) {
-    const searchValue = event.target.value.toLowerCase();
-    const roles = JSON.parse(localStorage.getItem('roles')) || [];
-    const filteredRoles = roles.filter(role => role.name.toLowerCase().includes(searchValue));
-    const rolesTableBody = document.querySelector('#rolesTable tbody');
-
-    // Clear existing rows
-    rolesTableBody.innerHTML = '';
-
-    if (filteredRoles.length === 0) {
-        // Display "No search results found" message
-        const noResultsMessage = document.createElement('tr');
-        noResultsMessage.id = 'noResultsMessage';
-        noResultsMessage.innerHTML = '<td colspan="3">No search results found</td>';
-        rolesTableBody.appendChild(noResultsMessage);
-    } else {
-        filteredRoles.forEach(role => {
-            const row = document.createElement('tr');
-            const formattedRoleId = `RL${String(role.id).padStart(3, '0')}`;
-            row.innerHTML = `
-                <td class="roleId-${role.id}">${formattedRoleId}</td>
-                <td class="roleName-${role.id}">${role.name}</td>
-                <td class="roleDescription-${role.id}">${role.description}</td>
-                <td class="actions" id="roleActions-${user.id}">
-                    <button title="assignUser" class="assignUser"><i class="fa-solid fa-user"></i> Assign User</button>
-                    <button title="assignGroup" class="assignGroup"><i class="fa-solid fa-user-group"></i> Assign Group</button>
-                </td>
-            `;
-            rolesTableBody.appendChild(row);
-
-            const assignUserBtn = row.querySelector('.assignUser');
-            const assignGroupBtn = row.querySelector('.assignGroup');
-
-            assignUserBtn.addEventListener('click', () => assignRoleToUser(role.id));
-            assignGroupBtn.addEventListener('click', () => assignRoleToGroup(role.id));
-        });
-    }
-
-}
-
-
-
-
-  
-
-
-
-
-
 //* exports
 
 module.exports = {

@@ -1518,51 +1518,6 @@ describe('Role Page', () => {
         
     });
 
-    
-
-
-// describe('handleSearch', () => {
-//     let rolesTableBody;
-    
-//     beforeEach(() => {
-        
-//         const roles = [
-//             { id: 1, name: 'Admin', description: 'Administrator role' },
-//             { id: 2, name: 'User', description: 'Regular user role' }
-//         ];
-//         localStorage.setItem('roles', JSON.stringify(roles));
-        
-//         ({handleSearch} = require('../script.js'));
-
-//         console.log(document.body.innerHTML )
-        
-//         rolesTableBody = document.querySelector('#rolesTable tbody');
-//     });
-
-//     it('should display filtered roles based on search input', () => {
-//         const searchInput = document.querySelector('#searchRole');
-        
-    
-//         searchInput.value = 'Admin';
-//         searchInput.dispatchEvent(new Event('input'));
-        
-//         expect(rolesTableBody.innerHTML).toContain('Admin');
-//         expect(rolesTableBody.innerHTML).not.toContain('User');
-//     });
-
-//     it('should display "No search results found" if no roles match the search query', () => {
-//         const searchInput = document.querySelector('#searchInput');
-        
-        
-//         // Simulate user input
-//         searchInput.value = 'Nonexistent';
-//         searchInput.dispatchEvent(new Event('input'));
-        
-//         expect(rolesTableBody.innerHTML).toContain('No search results found');
-//     });
-// });
-
-
 
 
 });
